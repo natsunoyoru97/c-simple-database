@@ -1,4 +1,3 @@
-fail_fast: false
 repos:
   - repo: local # https://github.com/natsunoyoru97/cpp-simple-database.git
     hooks:
