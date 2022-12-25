@@ -1,0 +1,20 @@
+fail_fast: false
+repos:
+  - repo: local # https://github.com/natsunoyoru97/cpp-simple-database.git
+    hooks:
+      - id: clang-format
+        name: clang-format
+        entry: clang-format
+        language: system
+        args: ["--style=Google"]
+      #- id: oclint
+      #- id: uncrustify
+      - id: cppcheck
+        name: cppcheck
+        entry: cppcheck
+        language: system
+      - id: cpplint
+        name: cpplint
+        entry: cpplint
+        language: system
+      #- id: include-what-you-use
