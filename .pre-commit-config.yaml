@@ -6,6 +6,7 @@ repos:
         name: clang-format
         entry: clang-format
         language: system
+        stages: [push]
         args: ["--style=Google"]
       #- id: oclint
       #- id: uncrustify
@@ -13,8 +14,10 @@ repos:
         name: cppcheck
         entry: cppcheck
         language: system
+        stages: [push]
       - id: cpplint
         name: cpplint
         entry: cpplint
         language: system
+        stages: [push]
       #- id: include-what-you-use
