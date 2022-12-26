@@ -1,5 +1,6 @@
-add_requires("doctest", "gtest")
+set_languages("c++17")
 
+add_requires("doctest", "gtest ~1.12.1")
 add_rules("mode.debug", "mode.release")
 
 target("target")
