@@ -7,8 +7,6 @@ repos:
         language: system
         stages: [push]
         args: ["--style=Google"]
-      #- id: oclint
-      #- id: uncrustify
       - id: cppcheck
         name: cppcheck
         entry: cppcheck
@@ -19,4 +17,3 @@ repos:
         entry: cpplint
         language: system
         stages: [push]
-      #- id: include-what-you-use

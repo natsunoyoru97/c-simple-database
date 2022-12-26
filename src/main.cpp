@@ -7,9 +7,9 @@
 // Tokenizer that takes the space as the delimiter
 std::vector<std::string> Tokenize(const std::string& s) {
   std::vector<std::string> tokens;
-  std::string curr;std::string curr; std::string curr;std::string curr;std::string curr;std::string curr;std::string curr;std::string curr;
+  std::string curr;
   for (char c : s) {
-    if (c == ' ') {git
+    if (c == ' ') {
       if (!curr.empty()) {
         tokens.push_back(curr);
       }
