@@ -1,13 +1,13 @@
 // Copyright 2022 natsunoyoru97
 
+#include <gflags/gflags.h>
+#include <glog/logging.h>
+
 #include <algorithm>
+#include <csignal>
 #include <iostream>
 #include <vector>
-#include <signal.h>
-#include <sys/signal.h>
 
-#include <glog/logging.h>
-#include <gflags/gflags.h>
 #include "absl/strings/str_join.h"
 
 DEFINE_string(test, "simple database", "the flag for test");
@@ -83,32 +83,35 @@ void ExecuteDb(const std::string& command,
 }
 
 // The signal handler for SIGPIPE
-void DoNothing(int signum) { /* Ignore SIGPIPE */ }
-
-void InitGlog(const char* argv0) {
-    google::InitGoogleLogging(argv0);
+void DoNothing(int signum) {
+  std::cout << "SIGPIPE"
+            << "\n"; /* Ignore SIGPIPE */
 }
 
+void InitGlog(const char* argv0) { google::InitGoogleLogging(argv0); }
+
 void InitGflags() {
-    // TODO: Use glog to replace the cout
-    std::cout << FLAGS_test << "\n";
+  // TODO: Use glog to replace the cout
+  std::cout << FLAGS_test << "\n";
 }
 
 void InitAbseil() {
-    std::vector<std::string> vec { "hello", "world" };
-    std::string s;
-    s = absl::StrJoin(vec, " ");
+  std::vector<std::string> vec{"hello", "world"};
+  std::string s = absl::StrJoin(vec, " ");
 
-    // TODO: Use glog to replace the cout
-    std::cout << s << "\n";
+  // TODO: Use glog to replace the cout
+  std::cout << s << "\n";
 }
 
 int main(int argc, char** argv) {
+  /* TODO: It seems that the result is not as expected.
+   It is a bug to fix.
+   */
+  std::signal(SIGPIPE, DoNothing);
+
   InitGlog(argv[0]);
   InitGflags();
   InitAbseil();
-
-  signal(SIGPIPE, DoNothing);
 
   while (true) {
     std::string command;
