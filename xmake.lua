@@ -3,6 +3,10 @@ set_languages("c++17")
 add_requires("doctest", "gtest ~1.12.1")
 add_rules("mode.debug", "mode.release")
 
+target("status_code")
+    set_kind("static")
+    add_files("src/utils/status_code.cc")
+
 target("target")
     set_kind("binary")
     add_files("src/*.cpp")
