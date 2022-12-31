@@ -91,7 +91,7 @@ void DoNothing(int signum) {
 void InitGlog(const char* argv0) { google::InitGoogleLogging(argv0); }
 
 void InitGflags() {
-  // TODO: Use glog to replace the cout
+  // TODO(natsunoyoru97): Use glog to replace the cout
   std::cout << FLAGS_test << "\n";
 }
 
@@ -99,12 +99,12 @@ void InitAbseil() {
   std::vector<std::string> vec{"hello", "world"};
   std::string s = absl::StrJoin(vec, " ");
 
-  // TODO: Use glog to replace the cout
+  // TODO(natsunoyoru97): Use glog to replace the cout
   std::cout << s << "\n";
 }
 
 int main(int argc, char** argv) {
-  /* TODO: It seems that the result is not as expected.
+  /* TODO(natsunoyoru97): It seems that the result is not as expected.
    It is a bug to fix.
    */
   std::signal(SIGPIPE, DoNothing);
