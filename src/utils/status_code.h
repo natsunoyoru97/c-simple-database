@@ -33,6 +33,6 @@ namespace utils {
 // std::string StatusCodeToString(StatusCode code);
 // std::ostream& operator<<(std::ostream& os, StatusCode code);
 
-} namespace utils
+} //namespace utils
 
 #endif // _UTILS_STATUS_CODE_H_
