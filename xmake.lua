@@ -7,6 +7,10 @@ target("target")
     set_kind("binary")
     add_files("src/*.cpp")
 
+target("table")
+    set_kind("static")
+    add_files("src/table/table.cpp")
+
 target("test")
     set_kind("binary")
     add_files("test/*.cc")
