@@ -6,7 +6,7 @@ add_rules("mode.debug", "mode.release")
 target("target")
     set_kind("binary")
     add_files("src/*.cpp")
-    add_packages("glog", "gflags")
+    add_packages("abseil", "glog", "gflags")
 
 target("test")
     set_kind("binary")
