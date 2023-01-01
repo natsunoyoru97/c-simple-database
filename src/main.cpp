@@ -88,19 +88,12 @@ void DoNothing(int signum) {
             << "\n"; /* Ignore SIGPIPE */
 }
 
+// TODO: redirect glog to stderr
 void InitGlog(const char* argv0) { google::InitGoogleLogging(argv0); }
 
 void InitGflags() {
   // TODO(natsunoyoru97): Use glog to replace the cout
   std::cout << FLAGS_test << "\n";
-}
-
-void InitAbseil() {
-  std::vector<std::string> vec{"hello", "world"};
-  std::string s = absl::StrJoin(vec, " ");
-
-  // TODO(natsunoyoru97): Use glog to replace the cout
-  std::cout << s << "\n";
 }
 
 int main(int argc, char** argv) {
@@ -111,7 +104,6 @@ int main(int argc, char** argv) {
 
   InitGlog(argv[0]);
   InitGflags();
-  InitAbseil();
 
   while (true) {
     std::string command;
