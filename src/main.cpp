@@ -88,7 +88,7 @@ void DoNothing(int signum) {
             << "\n"; /* Ignore SIGPIPE */
 }
 
-// TODO: redirect glog to stderr
+// TODO(natsunoyoru97): redirect glog to stderr
 void InitGlog(const char* argv0) { google::InitGoogleLogging(argv0); }
 
 void InitGflags() {
