@@ -3,7 +3,7 @@
 // Created by natsunoyoru on 23-1-2.
 //
 
-#include "src/pager/pager.h"
+#include "pager.h"
 
 #include <fcntl.h>
 #include <unistd.h>
@@ -26,7 +26,7 @@ Pager::Pager(const char* filename) {
 
   off_t file_len = lseek(fd, 0, SEEK_END);
 
-  file_descriptor_ = fd;
+  fd_ = fd;
   file_len_ = file_len;
 
   for (uint32_t i = 0; i < TABLE_MAX_PAGES; ++i) {
@@ -35,7 +35,7 @@ Pager::Pager(const char* filename) {
 }
 
 Pager::~Pager() {
-  int ret = close(file_descriptor_);
+  int ret = close(fd_);
   if (ret == -1) {
     // TODO(natsunoyoru97): Use glog to replace the cout
     std::cout << "Fail to close db file\n";
@@ -68,8 +68,8 @@ void* Pager::GetPage(uint32_t page_num) {
     }
 
     if (page_num < num_pages) {
-      lseek(file_descriptor_, page_num * PAGE_SIZE, SEEK_SET);
-      ssize_t bytes_read = read(file_descriptor_, page, PAGE_SIZE);
+      lseek(fd_, page_num * PAGE_SIZE, SEEK_SET);
+      ssize_t bytes_read = read(fd_, page, PAGE_SIZE);
       if (bytes_read == -1) {
         // TODO(natsunoyoru97): Use glog to replace the cout
         std::cout << "Fail to read the file\n";
@@ -90,7 +90,7 @@ void Pager::Flush(uint32_t page_num, uint32_t size) {
     exit(EXIT_FAILURE);
   }
 
-  off_t offset = lseek(file_descriptor_, page_num * PAGE_SIZE, SEEK_SET);
+  off_t offset = lseek(fd_, page_num * PAGE_SIZE, SEEK_SET);
 
   if (offset == -1) {
     // TODO(natsunoyoru97): Use glog to replace the cout
@@ -98,7 +98,7 @@ void Pager::Flush(uint32_t page_num, uint32_t size) {
     exit(EXIT_FAILURE);
   }
 
-  ssize_t bytes_written = write(file_descriptor_, pages_[page_num], size);
+  ssize_t bytes_written = write(fd_, pages_[page_num], size);
 
   if (bytes_written == -1) {
     // TODO(natsunoyoru97): Use glog to replace the cout

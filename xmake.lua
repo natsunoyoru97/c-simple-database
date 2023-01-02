@@ -12,9 +12,9 @@ target("pager")
     set_kind("static")
     add_files("src/pager/pager.cpp")
 
-target("table")
+target("storage")
     set_kind("static")
-    add_files("src/table/table.cpp")
+    add_files("src/storage/storage.cpp")
 
 target("test")
     set_kind("binary")

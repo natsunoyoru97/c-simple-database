@@ -3,7 +3,7 @@
 // Created by natsunoyoru on 22-12-31.
 //
 
-#include "src/table/table.h"
+#include "storage.h"
 
 #include <fcntl.h>
 #include <unistd.h>
@@ -16,7 +16,7 @@ constexpr uint32_t ROW_SIZE = 100;
 // TODO(natsunoyoru): duplicate declaration, this will be in an Util class
 constexpr uint32_t PAGE_SIZE = 256;
 
-namespace table {
+namespace storage {
 
 Table::Table(const char* filename) {
   pager::Pager* pager = new pager::Pager(filename);
@@ -61,4 +61,4 @@ void* Table::RowSlot(uint32_t row_num) {
   return page + byte_offset;
 }
 
-}  // namespace table
+}  // namespace storage

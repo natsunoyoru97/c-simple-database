@@ -2,14 +2,14 @@
 //
 // Created by natsunoyoru on 22-12-31.
 //
-#ifndef SRC_TABLE_TABLE_H_
-#define SRC_TABLE_TABLE_H_
+#ifndef SRC_STORAGE_STORAGE_H_
+#define SRC_STORAGE_STORAGE_H_
 
 #include <cstdint>
 
 #include "../pager/pager.h"
 
-namespace table {
+namespace storage {
 
 class Table {
  public:
@@ -23,6 +23,6 @@ class Table {
   void* RowSlot(uint32_t row_num);
 };
 
-}  // namespace table
+}  // namespace storage
 
-#endif  // SRC_TABLE_TABLE_H_
+#endif  // SRC_STORAGE_STORAGE_H_

@@ -16,7 +16,7 @@ class Pager {
  public:
   // TODO(natsunoyoru97): considering making some of the member variables
   // private
-  int file_descriptor_;
+  int fd_;
   uint32_t file_len_;
   // TODO(natsunoyoru97): use std::array instead
   void* pages_[TABLE_MAX_PAGES];
