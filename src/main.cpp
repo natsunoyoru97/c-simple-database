@@ -1,8 +1,16 @@
 // Copyright 2022 natsunoyoru97
 
+#include <gflags/gflags.h>
+#include <glog/logging.h>
+
 #include <algorithm>
+#include <csignal>
 #include <iostream>
 #include <vector>
+
+#include "absl/strings/str_join.h"
+
+DEFINE_string(test, "simple database", "the flag for test");
 
 // Tokenizer that takes the space as the delimiter
 std::vector<std::string> Tokenize(const std::string& s) {
@@ -74,8 +82,28 @@ void ExecuteDb(const std::string& command,
   }
 }
 
+// The signal handler for SIGPIPE
+void DoNothing(int signum) {
+  std::cout << "SIGPIPE"
+            << "\n"; /* Ignore SIGPIPE */
+}
+
+// TODO(natsunoyoru97): redirect glog to stderr
+void InitGlog(const char* argv0) { google::InitGoogleLogging(argv0); }
+
+void InitGflags() {
+  // TODO(natsunoyoru97): Use glog to replace the cout
+  std::cout << FLAGS_test << "\n";
+}
+
 int main(int argc, char** argv) {
-  std::cout << "Simple database" << std::endl;
+  /* TODO(natsunoyoru97): It seems that the result is not as expected.
+   It is a bug to fix.
+   */
+  std::signal(SIGPIPE, DoNothing);
+
+  InitGlog(argv[0]);
+  InitGflags();
 
   while (true) {
     std::string command;

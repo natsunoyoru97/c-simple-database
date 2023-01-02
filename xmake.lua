@@ -1,11 +1,12 @@
 set_languages("c++17")
 
-add_requires("doctest", "gtest ~1.12.1")
+add_requires("abseil", "doctest", "gtest ~1.12.1", "glog", "gflags")
 add_rules("mode.debug", "mode.release")
 
 target("target")
     set_kind("binary")
     add_files("src/*.cpp")
+    add_packages("abseil", "glog", "gflags")
 
 target("test")
     set_kind("binary")
