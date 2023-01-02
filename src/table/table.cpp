@@ -1,8 +1,9 @@
+// Copyright 2022 natsunoyoru97
 //
 // Created by natsunoyoru on 22-12-31.
 //
 
-#include "table.h"
+#include "src/table/table.h"
 
 #include <fcntl.h>
 #include <unistd.h>
