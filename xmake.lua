@@ -7,11 +7,15 @@ target("target")
     set_kind("binary")
     add_files("src/*.cpp")
     add_packages("abseil", "glog", "gflags")
+    set_warnings("all", "error")
+    add_cxxflags("-pedantic")
 
 target("test")
     set_kind("binary")
     add_files("test/*.cc")
     add_packages("gtest")
+    set_warnings("all", "error")
+    add_cxxflags("-pedantic")
 
 --
 -- If you want to known more usage about xmake, please see https://xmake.io
