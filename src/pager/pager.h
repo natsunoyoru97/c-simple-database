@@ -1,16 +1,33 @@
+// Copyright 2022 natsunoyoru97
 //
 // Created by natsunoyoru on 23-1-2.
 //
 
-#ifndef CPP_SIMPLE_DATABASE_PAGER_H
-#define CPP_SIMPLE_DATABASE_PAGER_H
+#ifndef SRC_PAGER_PAGER_H_
+#define SRC_PAGER_PAGER_H_
+
+#include <cstdint>
+
+constexpr uint32_t TABLE_MAX_PAGES = 1024;
 
 namespace pager {
 
-    class pager {
+class Pager {
+ public:
+  // TODO(natsunoyoru97): considering making some of the member variables
+  // private
+  int file_descriptor_;
+  uint32_t file_len_;
+  // TODO(natsunoyoru97): use std::array instead
+  void* pages_[TABLE_MAX_PAGES];
 
-    };
+  explicit Pager(const char* filename);
+  ~Pager();
 
-} // pager
+  void* GetPage(uint32_t page_num);
+  void Flush(uint32_t page_num, uint32_t size);
+};
 
-#endif //CPP_SIMPLE_DATABASE_PAGER_H
+}  // namespace pager
+
+#endif  // SRC_PAGER_PAGER_H_

@@ -8,6 +8,10 @@ target("target")
     add_files("src/*.cpp")
     add_packages("abseil", "glog", "gflags")
 
+target("pager")
+    set_kind("static")
+    add_files("src/pager/pager.cpp")
+
 target("table")
     set_kind("static")
     add_files("src/table/table.cpp")
