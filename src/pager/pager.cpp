@@ -3,7 +3,7 @@
 // Created by natsunoyoru on 23-1-2.
 //
 
-#include "pager.h"
+#include "pager.h" // NOLINT
 
 #include <fcntl.h>
 #include <unistd.h>
@@ -12,8 +12,11 @@
 #include <iostream>
 
 // TODO(natsunoyoru): duplicate declaration, this will be in an Util class
+// The size of bytes a page has
 constexpr uint32_t PAGE_SIZE = 256;
+// The fixed-size of rows that contains in a page
 constexpr uint32_t ROWS_PER_PAGE = 100;
+// The size of bytes a row has
 constexpr uint32_t ROW_SIZE = 100;
 
 namespace pager {
@@ -131,7 +134,7 @@ void Pager::Flush(uint32_t page_num, uint32_t size) {
     exit(EXIT_FAILURE);
   }
 
-  ssize_t bytes_written = write(fd_, pages_[page_num], size);
+  ssize_t bytes_written = pwrite(fd_, pages_[page_num], size, 0);
 
   if (bytes_written == -1) {
     // TODO(natsunoyoru97): Use glog to replace the cout

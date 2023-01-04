@@ -3,7 +3,7 @@
 // Created by natsunoyoru on 22-12-31.
 //
 
-#include "storage.h"
+#include "storage.h" // NOLINT
 
 #include <fcntl.h>
 #include <unistd.h>
@@ -11,10 +11,13 @@
 #include <cstdio>
 #include <iostream>
 
-constexpr uint32_t ROWS_PER_PAGE = 100;
-constexpr uint32_t ROW_SIZE = 100;
 // TODO(natsunoyoru97): duplicate declaration, this will be in an Util class
+// The size of bytes a page has
 constexpr uint32_t PAGE_SIZE = 256;
+// The fixed-size of rows that contains in a page
+constexpr uint32_t ROWS_PER_PAGE = 100;
+// The size of bytes a row has
+constexpr uint32_t ROW_SIZE = 100;
 
 namespace storage {
 
@@ -27,7 +30,6 @@ Table::Table(const char* filename) {
 
 Table::~Table() {}
 
-// TODO(natsunoyoru97): It is assumed to be a *getter* and it should not return a writable object
 void* Table::GetRowSlot(uint32_t row_num) {
   uint32_t page_num = row_num / ROWS_PER_PAGE;
   void* page = pager_->GetPage(page_num);

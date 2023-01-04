@@ -6,18 +6,20 @@
 #ifndef SRC_PAGER_PAGER_H_
 #define SRC_PAGER_PAGER_H_
 
-#include <cstdint>
 #include <array>
+#include <cstdint>
 
+// Maximum pages a table stores
 constexpr uint32_t TABLE_MAX_PAGES = 1024;
 
 namespace pager {
 
-// The indirection layer to give a block of memory
+// The indirection layer to handle file descriptor and give a block of memory
 class Pager {
  private:
   int fd_;
   uint32_t file_len_;
+  // Rows this block of memory has
   uint32_t num_rows_;
   // TODO(natsunoyoru97): how about using other data structures?
   std::array<void*, TABLE_MAX_PAGES> pages_;

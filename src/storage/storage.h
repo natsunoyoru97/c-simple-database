@@ -11,17 +11,20 @@
 
 namespace storage {
 
-// Storage manager of the database - 
-// A wrapper to maintain the database files 
-// and it only provides a READ interface 
+// Storage manager of the database -
+// A wrapper to maintain the database files
+// and it only provides a READ interface
 class Table {
  private:
   pager::Pager* pager_;
+
  public:
   explicit Table(const char* filename);
   ~Table();
   // A getter of a row of a page
   // It can only READ the data from a centrain page
+  // TODO(natsunoyoru97): It is assumed to be a *getter* and it should not return
+  // a writable object
   void* GetRowSlot(uint32_t row_num);
 };
 
