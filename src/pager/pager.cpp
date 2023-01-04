@@ -3,7 +3,7 @@
 // Created by natsunoyoru on 23-1-2.
 //
 
-#include "pager.h" // NOLINT
+#include "pager.h"  // NOLINT
 
 #include <fcntl.h>
 #include <unistd.h>
@@ -126,15 +126,9 @@ void Pager::Flush(uint32_t page_num, uint32_t size) {
     exit(EXIT_FAILURE);
   }
 
-  off_t offset = lseek(fd_, page_num * PAGE_SIZE, SEEK_SET);
-
-  if (offset == -1) {
-    // TODO(natsunoyoru97): Use glog to replace the cout
-    std::cout << "Fail to seek the page\n";
-    exit(EXIT_FAILURE);
-  }
-
-  ssize_t bytes_written = pwrite(fd_, pages_[page_num], size, 0);
+  // call lseek and write in sequence to make write atomic
+  ssize_t bytes_written =
+      pwrite(fd_, pages_[page_num], size, page_num * PAGE_SIZE);
 
   if (bytes_written == -1) {
     // TODO(natsunoyoru97): Use glog to replace the cout
