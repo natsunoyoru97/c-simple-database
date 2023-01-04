@@ -3,7 +3,7 @@
 // Created by natsunoyoru on 23-1-2.
 //
 
-#include "pager.h"
+#include "src/pager/pager.h"
 
 #include <fcntl.h>
 #include <unistd.h>
