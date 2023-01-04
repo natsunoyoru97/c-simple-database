@@ -3,7 +3,7 @@
 // Created by natsunoyoru on 23-1-2.
 //
 
-#include "src/pager/pager.h"
+#include "pager.h"
 
 #include <fcntl.h>
 #include <unistd.h>
@@ -13,6 +13,8 @@
 
 // TODO(natsunoyoru): duplicate declaration, this will be in an Util class
 constexpr uint32_t PAGE_SIZE = 256;
+constexpr uint32_t ROWS_PER_PAGE = 100;
+constexpr uint32_t ROW_SIZE = 100;
 
 namespace pager {
 Pager::Pager(const char* filename) {
@@ -32,9 +34,36 @@ Pager::Pager(const char* filename) {
   for (uint32_t i = 0; i < TABLE_MAX_PAGES; ++i) {
     pages_[i] = nullptr;
   }
+
+  uint32_t num_rows = file_len_ / ROW_SIZE;
+  num_rows_ = num_rows;
 }
 
 Pager::~Pager() {
+  uint32_t num_full_pages = num_rows_ / ROWS_PER_PAGE;
+
+  for (uint32_t i = 0; i < num_full_pages; ++i) {
+    if (pages_[i] == nullptr) {
+      continue;
+    }
+    Flush(i, PAGE_SIZE);
+    // NOTE(natsunoyoru97): void* cannot apply for new[]/delete[]
+    free(pages_[i]);
+    pages_[i] = nullptr;
+  }
+
+  // There may be a partial page to write to the end of the file
+  uint32_t num_additional_rows = num_rows_ % ROWS_PER_PAGE;
+  if (num_additional_rows > 0) {
+    uint32_t page_num = num_full_pages;
+    if (pages_[page_num] != NULL) {
+      Flush(page_num, num_additional_rows * ROW_SIZE);
+      // NOTE(natsunoyoru97): void* cannot apply for new[]/delete[]
+      free(pages_[page_num]);
+      pages_[page_num] = NULL;
+    }
+  }
+
   int ret = close(fd_);
   if (ret == -1) {
     // TODO(natsunoyoru97): Use glog to replace the cout

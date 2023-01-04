@@ -12,12 +12,15 @@ constexpr uint32_t TABLE_MAX_PAGES = 1024;
 
 namespace pager {
 
+// TODO(natsunoyoru97): comment out what Pager does
 class Pager {
  public:
   // TODO(natsunoyoru97): considering making some of the member variables
   // private
   int fd_;
   uint32_t file_len_;
+  uint32_t num_rows_;
+
   // TODO(natsunoyoru97): use std::array instead
   void* pages_[TABLE_MAX_PAGES];
 

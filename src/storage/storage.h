@@ -11,16 +11,16 @@
 
 namespace storage {
 
+// TODO(natsunoyoru): comment out what Table does 
 class Table {
  public:
   // TODO(natsunoyoru97): considering making some of the member variables
   // private
   pager::Pager* pager_;
-  uint32_t num_rows_;
 
   explicit Table(const char* filename);
   ~Table();
-  void* RowSlot(uint32_t row_num);
+  void* GetRowSlot(uint32_t row_num);
 };
 
 }  // namespace storage
