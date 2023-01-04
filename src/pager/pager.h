@@ -7,27 +7,28 @@
 #define SRC_PAGER_PAGER_H_
 
 #include <cstdint>
+#include <array>
 
 constexpr uint32_t TABLE_MAX_PAGES = 1024;
 
 namespace pager {
 
-// TODO(natsunoyoru97): comment out what Pager does
+// The indirection layer to give a block of memory
 class Pager {
- public:
-  // TODO(natsunoyoru97): considering making some of the member variables
-  // private
+ private:
   int fd_;
   uint32_t file_len_;
   uint32_t num_rows_;
+  // TODO(natsunoyoru97): how about using other data structures?
+  std::array<void*, TABLE_MAX_PAGES> pages_;
 
-  // TODO(natsunoyoru97): use std::array instead
-  void* pages_[TABLE_MAX_PAGES];
-
+ public:
   explicit Pager(const char* filename);
   ~Pager();
 
+  // Get a page from the data cache
   void* GetPage(uint32_t page_num);
+  // Write data to the data cache
   void Flush(uint32_t page_num, uint32_t size);
 };
 

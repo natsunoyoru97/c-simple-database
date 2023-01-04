@@ -18,7 +18,8 @@ constexpr uint32_t PAGE_SIZE = 256;
 
 namespace storage {
 
-// TODO(natsunoyoru97): What's the use of the page_num here? Why we have Table and Pager here?
+// TODO(natsunoyoru97): What's the use of the page_num here?
+// A: the page_num should not be in the Table object.
 Table::Table(const char* filename) {
   pager::Pager* pager = new pager::Pager(filename);
   pager_ = pager;
@@ -26,7 +27,7 @@ Table::Table(const char* filename) {
 
 Table::~Table() {}
 
-// NOTE(natsunoyoru97): This is assumed to be a *getter* 
+// TODO(natsunoyoru97): It is assumed to be a *getter* and it should not return a writable object
 void* Table::GetRowSlot(uint32_t row_num) {
   uint32_t page_num = row_num / ROWS_PER_PAGE;
   void* page = pager_->GetPage(page_num);

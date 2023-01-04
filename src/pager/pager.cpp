@@ -48,6 +48,7 @@ Pager::~Pager() {
     }
     Flush(i, PAGE_SIZE);
     // NOTE(natsunoyoru97): void* cannot apply for new[]/delete[]
+    // TODO(natsunoyoru97): Make page an abstract object
     free(pages_[i]);
     pages_[i] = nullptr;
   }
@@ -59,6 +60,7 @@ Pager::~Pager() {
     if (pages_[page_num] != NULL) {
       Flush(page_num, num_additional_rows * ROW_SIZE);
       // NOTE(natsunoyoru97): void* cannot apply for new[]/delete[]
+      // TODO(natsunoyoru97): Make page an abstract object
       free(pages_[page_num]);
       pages_[page_num] = NULL;
     }
@@ -74,6 +76,7 @@ Pager::~Pager() {
     void* page = pages_[i];
     if (page != nullptr) {
       // NOTE(natsunoyoru97): void* cannot apply for new[]/delete[]
+      // TODO(natsunoyoru97): Make page an ADT
       free(page);
       pages_[i] = nullptr;
     }
@@ -89,6 +92,7 @@ void* Pager::GetPage(uint32_t page_num) {
 
   if (pages_[page_num] == nullptr) {
     // NOTE(natsunoyoru97): void* cannot apply for new[]/delete[]
+    // TODO(natsunoyoru97): Make page an ADT
     void* page = malloc(PAGE_SIZE);
     uint32_t num_pages = file_len_ / PAGE_SIZE;
 
