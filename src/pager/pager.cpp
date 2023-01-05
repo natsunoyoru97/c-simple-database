@@ -20,9 +20,10 @@ constexpr uint32_t ROWS_PER_PAGE = 100;
 constexpr uint32_t ROW_SIZE = 100;
 
 namespace pager {
-Pager::Pager(const char* filename) {
+Pager* Pager::InitPager(const char* filename) {
   int fd = open(filename, O_RDWR | O_CREAT, S_IWUSR | S_IRUSR);
 
+  // TODO(natsunoyoru97): propogate error status
   if (fd == -1) {
     // TODO(natsunoyoru97): Use glog to replace the cout
     std::cout << "Fail to open the file\n";
@@ -63,7 +64,7 @@ Pager::~Pager() {
     if (pages_[page_num] != NULL) {
       Flush(page_num, num_additional_rows * ROW_SIZE);
       // NOTE(natsunoyoru97): void* cannot apply for new[]/delete[]
-      // TODO(natsunoyoru97): Make page an abstract object
+      // TODO(natsunoyoru97): Make page an ADT
       free(pages_[page_num]);
       pages_[page_num] = NULL;
     }

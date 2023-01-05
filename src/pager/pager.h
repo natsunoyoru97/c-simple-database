@@ -25,7 +25,8 @@ class Pager {
   std::array<void*, TABLE_MAX_PAGES> pages_;
 
  public:
-  explicit Pager(const char* filename);
+  static Pager* InitPager(const char* filename);
+  Pager() = delete;
   ~Pager();
 
   // Get a page from the data cache

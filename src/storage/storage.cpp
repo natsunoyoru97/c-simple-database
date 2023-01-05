@@ -24,7 +24,7 @@ namespace storage {
 // TODO(natsunoyoru97): What's the use of the page_num here?
 // A: the page_num should not be in the Table object.
 Table::Table(const char* filename) {
-  pager::Pager* pager = new pager::Pager(filename);
+  pager::Pager* pager = pager::PagerInit(filename);
   pager_ = pager;
 }
 
