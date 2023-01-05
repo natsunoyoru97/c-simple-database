@@ -61,12 +61,12 @@ Pager::~Pager() {
   uint32_t num_additional_rows = num_rows_ % ROWS_PER_PAGE;
   if (num_additional_rows > 0) {
     uint32_t page_num = num_full_pages;
-    if (pages_[page_num] != NULL) {
+    if (pages_[page_num] != nullptr) {
       Flush(page_num, num_additional_rows * ROW_SIZE);
       // NOTE(natsunoyoru97): void* cannot apply for new[]/delete[]
       // TODO(natsunoyoru97): Make page an ADT
       free(pages_[page_num]);
-      pages_[page_num] = NULL;
+      pages_[page_num] = nullptr;
     }
   }
 
@@ -87,7 +87,7 @@ Pager::~Pager() {
   }
 }
 
-void* Pager::GetPage(uint32_t page_num) {
+const char* Pager::GetPage(uint32_t page_num) {
   if (page_num >= TABLE_MAX_PAGES) {
     // TODO(natsunoyoru97): Use glog to replace the cout
     std::cout << "Tried to fetch page number out of bounds.\n";
@@ -95,7 +95,7 @@ void* Pager::GetPage(uint32_t page_num) {
   }
 
   if (pages_[page_num] == nullptr) {
-    // NOTE(natsunoyoru97): void* cannot apply for new[]/delete[]
+    // NOTE(natsunoyoru97): void* cannot apply for new[]/delete[], char*
     // TODO(natsunoyoru97): Make page an ADT
     void* page = malloc(PAGE_SIZE);
     uint32_t num_pages = file_len_ / PAGE_SIZE;
@@ -121,13 +121,12 @@ void* Pager::GetPage(uint32_t page_num) {
 }
 
 void Pager::Flush(uint32_t page_num, uint32_t size) {
-  if (pages_[page_num] == NULL) {
+  if (pages_[page_num] == nullptr) {
     // TODO(natsunoyoru97): Use glog to replace the cout
     std::cout << "Tried to flush null page\n";
     exit(EXIT_FAILURE);
   }
 
-  // call lseek and write in sequence to make write atomic
   ssize_t bytes_written =
       pwrite(fd_, pages_[page_num], size, page_num * PAGE_SIZE);
 
