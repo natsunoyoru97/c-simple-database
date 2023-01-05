@@ -11,16 +11,17 @@
 #include <cstdlib>
 #include <iostream>
 
-// TODO(natsunoyoru): duplicate declaration, this will be in an Util class
+// TODO(natsunoyoru97): duplicate declaration, this will be in an Util class
 // The size of bytes a page has
-constexpr uint32_t PAGE_SIZE = 256;
+constexpr uint32_t k_page_size = 256;
 // The fixed-size of rows that contains in a page
-constexpr uint32_t ROWS_PER_PAGE = 100;
+constexpr uint32_t rows_per_page = 100;
 // The size of bytes a row has
-constexpr uint32_t ROW_SIZE = 100;
+constexpr uint32_t row_size = 100;
 
-namespace pager {
+namespace storage {
 Pager* Pager::InitPager(const char* filename) {
+  Pager* pager;
   int fd = open(filename, O_RDWR | O_CREAT, S_IWUSR | S_IRUSR);
 
   // TODO(natsunoyoru97): propogate error status
@@ -32,41 +33,44 @@ Pager* Pager::InitPager(const char* filename) {
 
   off_t file_len = lseek(fd, 0, SEEK_END);
 
-  fd_ = fd;
-  file_len_ = file_len;
+  pager->fd_ = fd;
+  pager->file_len_ = file_len;
 
   for (uint32_t i = 0; i < TABLE_MAX_PAGES; ++i) {
     pages_[i] = nullptr;
   }
 
-  uint32_t num_rows = file_len_ / ROW_SIZE;
-  num_rows_ = num_rows;
+  uint32_t num_rows = (file_len_ % row_size == 0) ? file_len_ / row_size
+                                                  : file_len_ / row_size + 1;
+  pager->num_rows_ = num_rows;
+
+  return pager;
 }
 
 Pager::~Pager() {
-  uint32_t num_full_pages = num_rows_ / ROWS_PER_PAGE;
+  uint32_t num_full_pages = (num_rows_ % rows_per_page == 0)
+                                ? num_rows_ / rows_per_page
+                                : num_rows_ / rows_per_page + 1;
 
   for (uint32_t i = 0; i < num_full_pages; ++i) {
     if (pages_[i] == nullptr) {
       continue;
     }
-    Flush(i, PAGE_SIZE);
-    // NOTE(natsunoyoru97): void* cannot apply for new[]/delete[]
-    // TODO(natsunoyoru97): Make page an abstract object
-    free(pages_[i]);
-    pages_[i] = nullptr;
+    Flush(i, k_page_size);
+    // TODO(natsunoyoru97): Make page an ADT
+    // and consider use unique_ptr
+    delete pages_[i];
   }
 
   // There may be a partial page to write to the end of the file
-  uint32_t num_additional_rows = num_rows_ % ROWS_PER_PAGE;
+  uint32_t num_additional_rows = num_rows_ % rows_per_page;
   if (num_additional_rows > 0) {
     uint32_t page_num = num_full_pages;
     if (pages_[page_num] != nullptr) {
-      Flush(page_num, num_additional_rows * ROW_SIZE);
-      // NOTE(natsunoyoru97): void* cannot apply for new[]/delete[]
+      Flush(page_num, num_additional_rows * row_size);
       // TODO(natsunoyoru97): Make page an ADT
-      free(pages_[page_num]);
-      pages_[page_num] = nullptr;
+    // and consider use unique_ptr
+      delete pages_[page_num];
     }
   }
 
@@ -77,12 +81,11 @@ Pager::~Pager() {
     exit(EXIT_FAILURE);
   }
   for (uint32_t i = 0; i < TABLE_MAX_PAGES; i++) {
-    void* page = pages_[i];
+    char* page = pages_[i];
     if (page != nullptr) {
-      // NOTE(natsunoyoru97): void* cannot apply for new[]/delete[]
       // TODO(natsunoyoru97): Make page an ADT
-      free(page);
-      pages_[i] = nullptr;
+    // and consider use unique_ptr
+      delete page;
     }
   }
 }
@@ -95,18 +98,18 @@ const char* Pager::GetPage(uint32_t page_num) {
   }
 
   if (pages_[page_num] == nullptr) {
-    // NOTE(natsunoyoru97): void* cannot apply for new[]/delete[], char*
     // TODO(natsunoyoru97): Make page an ADT
-    void* page = malloc(PAGE_SIZE);
-    uint32_t num_pages = file_len_ / PAGE_SIZE;
+    // and consider use unique_ptr
+    char* page = new char[k_page_size];
+    uint32_t num_pages = file_len_ / k_page_size;
 
-    if (file_len_ % PAGE_SIZE != 0) {
+    if (file_len_ % k_page_size != 0) {
       num_pages++;
     }
 
     if (page_num < num_pages) {
-      lseek(fd_, page_num * PAGE_SIZE, SEEK_SET);
-      ssize_t bytes_read = read(fd_, page, PAGE_SIZE);
+      ssize_t bytes_read =
+          pread(fd_, page, k_page_size, page_num * k_page_size);
       if (bytes_read == -1) {
         // TODO(natsunoyoru97): Use glog to replace the cout
         std::cout << "Fail to read the file\n";
@@ -128,7 +131,7 @@ void Pager::Flush(uint32_t page_num, uint32_t size) {
   }
 
   ssize_t bytes_written =
-      pwrite(fd_, pages_[page_num], size, page_num * PAGE_SIZE);
+      pwrite(fd_, pages_[page_num], size, page_num * k_page_size);
 
   if (bytes_written == -1) {
     // TODO(natsunoyoru97): Use glog to replace the cout
@@ -136,4 +139,4 @@ void Pager::Flush(uint32_t page_num, uint32_t size) {
     exit(EXIT_FAILURE);
   }
 }
-}  // namespace pager
+}  // namespace storage

@@ -12,17 +12,19 @@
 // Maximum pages a table stores
 constexpr uint32_t TABLE_MAX_PAGES = 1024;
 
-namespace pager {
+namespace storage {
 
 // The indirection layer to handle file descriptor and give a block of memory
 class Pager {
  private:
-  int fd_;
-  uint32_t file_len_;
+  static int fd_;
+  static uint32_t file_len_;
   // Rows this block of memory has
-  uint32_t num_rows_;
+  // NOTE(natsunoyoru97): I would like to remain this member variable for a
+  // while to see if it is in need for future
+  static uint32_t num_rows_;
   // TODO(natsunoyoru97): how about using other data structures?
-  std::array<void*, TABLE_MAX_PAGES> pages_;
+  static std::array<char*, TABLE_MAX_PAGES> pages_;
 
  public:
   static Pager* InitPager(const char* filename);
@@ -35,6 +37,6 @@ class Pager {
   void Flush(uint32_t page_num, uint32_t size);
 };
 
-}  // namespace pager
+}  // namespace storage
 
 #endif  // SRC_PAGER_PAGER_H_
