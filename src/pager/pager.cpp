@@ -11,13 +11,7 @@
 #include <cstdlib>
 #include <iostream>
 
-// TODO(natsunoyoru97): duplicate declaration, this will be in an Util class
-// The size of bytes a page has
-constexpr uint32_t k_page_size = 256;
-// The fixed-size of rows that contains in a page
-constexpr uint32_t rows_per_page = 100;
-// The size of bytes a row has
-constexpr uint32_t row_size = 100;
+#include "../util/util.h"
 
 namespace storage {
 Pager* Pager::InitPager(const char* filename) {
@@ -28,6 +22,7 @@ Pager* Pager::InitPager(const char* filename) {
   if (fd == -1) {
     // TODO(natsunoyoru97): Use glog to replace the cout
     std::cout << "Fail to open the file\n";
+    // TODO(natsunoyoru97): Use Status/StatusOr instead
     exit(EXIT_FAILURE);
   }
 
@@ -66,13 +61,14 @@ Pager::~Pager() {
   if (ret == -1) {
     // TODO(natsunoyoru97): Use glog to replace the cout
     std::cout << "Fail to close db file\n";
+    // TODO(natsunoyoru97): Use Status/StatusOr instead
     exit(EXIT_FAILURE);
   }
   for (uint32_t i = 0; i < TABLE_MAX_PAGES; i++) {
     char* page = pages_[i];
     if (page != nullptr) {
       // TODO(natsunoyoru97): Make page an ADT
-    // and consider use unique_ptr
+      // and consider use unique_ptr
       delete page;
     }
   }
@@ -82,6 +78,7 @@ const char* Pager::GetPage(uint32_t page_num) {
   if (page_num >= TABLE_MAX_PAGES) {
     // TODO(natsunoyoru97): Use glog to replace the cout
     std::cout << "Tried to fetch page number out of bounds.\n";
+    // TODO(natsunoyoru97): Use Status/StatusOr instead
     exit(EXIT_FAILURE);
   }
 
@@ -101,6 +98,7 @@ const char* Pager::GetPage(uint32_t page_num) {
       if (bytes_read == -1) {
         // TODO(natsunoyoru97): Use glog to replace the cout
         std::cout << "Fail to read the file\n";
+        // TODO(natsunoyoru97): Use Status/StatusOr instead
         exit(EXIT_FAILURE);
       }
     }
@@ -115,15 +113,18 @@ void Pager::Flush(uint32_t page_start, uint32_t page_num_to_flush) {
   if (pages_[page_start] == nullptr) {
     // TODO(natsunoyoru97): Use glog to replace the cout
     std::cout << "Tried to flush null page\n";
+    // TODO(natsunoyoru97): Use Status/StatusOr instead
     exit(EXIT_FAILURE);
   }
 
   ssize_t bytes_written =
-      pwrite(fd_, pages_[page_start], page_num_to_flush * k_page_size, page_start * k_page_size);
+      pwrite(fd_, pages_[page_start], page_num_to_flush * k_page_size,
+             page_start * k_page_size);
 
   if (bytes_written == -1) {
     // TODO(natsunoyoru97): Use glog to replace the cout
     std::cout << "Fail to write to db\n";
+    // TODO(natsunoyoru97): Use Status/StatusOr instead
     exit(EXIT_FAILURE);
   }
 }

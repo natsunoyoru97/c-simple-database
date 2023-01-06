@@ -11,13 +11,7 @@
 #include <cstdio>
 #include <iostream>
 
-// TODO(natsunoyoru97): duplicate declaration, this will be in an Util class
-// The size of bytes a page has
-constexpr uint32_t k_page_size = 256;
-// The fixed-size of rows that contains in a page
-constexpr uint32_t rows_per_page = 100;
-// The size of bytes a row has
-constexpr uint32_t row_size = 100;
+#include "../util/util.h"
 
 namespace storage {
 
