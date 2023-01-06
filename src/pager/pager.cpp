@@ -26,6 +26,7 @@ Pager* Pager::InitPager(const char* filename) {
     exit(EXIT_FAILURE);
   }
 
+  // TODO(natsunoyoru97): consider about the expection - what if it returns -1?
   off_t file_len = lseek(fd, 0, SEEK_END);
 
   pager->fd_ = fd;
