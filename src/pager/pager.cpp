@@ -56,22 +56,10 @@ Pager::~Pager() {
     if (pages_[i] == nullptr) {
       continue;
     }
-    Flush(i, k_page_size);
+    Flush(i, 1);
     // TODO(natsunoyoru97): Make page an ADT
     // and consider use unique_ptr
     delete pages_[i];
-  }
-
-  // There may be a partial page to write to the end of the file
-  uint32_t num_additional_rows = num_rows_ % rows_per_page;
-  if (num_additional_rows > 0) {
-    uint32_t page_num = num_full_pages;
-    if (pages_[page_num] != nullptr) {
-      Flush(page_num, num_additional_rows * row_size);
-      // TODO(natsunoyoru97): Make page an ADT
-    // and consider use unique_ptr
-      delete pages_[page_num];
-    }
   }
 
   int ret = close(fd_);
@@ -123,15 +111,15 @@ const char* Pager::GetPage(uint32_t page_num) {
   return pages_[page_num];
 }
 
-void Pager::Flush(uint32_t page_num, uint32_t size) {
-  if (pages_[page_num] == nullptr) {
+void Pager::Flush(uint32_t page_start, uint32_t page_num_to_flush) {
+  if (pages_[page_start] == nullptr) {
     // TODO(natsunoyoru97): Use glog to replace the cout
     std::cout << "Tried to flush null page\n";
     exit(EXIT_FAILURE);
   }
 
   ssize_t bytes_written =
-      pwrite(fd_, pages_[page_num], size, page_num * k_page_size);
+      pwrite(fd_, pages_[page_start], page_num_to_flush * k_page_size, page_start * k_page_size);
 
   if (bytes_written == -1) {
     // TODO(natsunoyoru97): Use glog to replace the cout

@@ -34,7 +34,7 @@ class Pager {
   // Get a page from the data cache
   const char* GetPage(uint32_t page_num);
   // Write data to the data cache
-  void Flush(uint32_t page_num, uint32_t size);
+  void Flush(uint32_t page_start, uint32_t page_num_to_flush);
 };
 
 }  // namespace storage
