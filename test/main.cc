@@ -13,3 +13,11 @@ TEST(QueryTest, SelectWorks) {}
 TEST(QueryTest, InsertWorks) {}
 
 TEST(QueryTest, DeleteWorks) {}
+
+// Tests for Storage
+TEST(StorageTest, CtorWorks) {}
+
+TEST(StorageTest, DtorWorks) {}
+
+// Tests for Pager
+TEST(PagerTest, CtorWorks) {}

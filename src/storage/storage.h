@@ -19,8 +19,9 @@ class Table {
   Pager* pager_;
 
  public:
-  explicit Table(const char* filename);
-  ~Table();
+  Table() = delete;
+  static Table* InitTable(const char* filename);
+  ~Table() = default;
   // A getter of a row of a page
   // It can only READ the data from a centrain page
   // TODO(natsunoyoru97): It is assumed to be a *getter* and it should not

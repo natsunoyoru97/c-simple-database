@@ -13,6 +13,7 @@
 constexpr uint32_t TABLE_MAX_PAGES = 1024;
 
 namespace storage {
+  // TODO(natsunopyoru97): add a handler for file operation
 
 // The indirection layer to handle file descriptor and give a block of memory
 class Pager {

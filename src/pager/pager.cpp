@@ -26,7 +26,7 @@ Pager* Pager::InitPager(const char* filename) {
     exit(EXIT_FAILURE);
   }
 
-  // TODO(natsunoyoru97): consider about the expection - what if it returns -1?
+  // TODO(natsunoyoru97): consider about the case that the file is created and it is 0
   off_t file_len = lseek(fd, 0, SEEK_END);
 
   pager->fd_ = fd;
@@ -36,23 +36,23 @@ Pager* Pager::InitPager(const char* filename) {
     pages_[i] = nullptr;
   }
 
-  uint32_t num_rows = (file_len_ % row_size == 0) ? file_len_ / row_size
-                                                  : file_len_ / row_size + 1;
+  uint32_t num_rows = (file_len_ % rowSize == 0) ? file_len_ / rowSize
+                                                  : file_len_ / rowSize + 1;
   pager->num_rows_ = num_rows;
 
   return pager;
 }
 
 Pager::~Pager() {
-  uint32_t num_full_pages = (num_rows_ % rows_per_page == 0)
-                                ? num_rows_ / rows_per_page
-                                : num_rows_ / rows_per_page + 1;
+  uint32_t num_full_pages = (num_rows_ % rowsPerPage == 0)
+                                ? num_rows_ / rowsPerPage
+                                : num_rows_ / rowsPerPage + 1;
 
   for (uint32_t i = 0; i < num_full_pages; ++i) {
     if (pages_[i] == nullptr) {
       continue;
     }
-    Flush(i, 1);
+    Flush(i);
     // TODO(natsunoyoru97): Make page an ADT
     // and consider use unique_ptr
     delete pages_[i];
@@ -65,6 +65,8 @@ Pager::~Pager() {
     // TODO(natsunoyoru97): Use Status/StatusOr instead
     exit(EXIT_FAILURE);
   }
+
+  // TODO(natsunoyoru97): double free
   for (uint32_t i = 0; i < TABLE_MAX_PAGES; i++) {
     char* page = pages_[i];
     if (page != nullptr) {
@@ -86,16 +88,16 @@ const char* Pager::GetPage(uint32_t page_num) {
   if (pages_[page_num] == nullptr) {
     // TODO(natsunoyoru97): Make page an ADT
     // and consider use unique_ptr
-    char* page = new char[k_page_size];
-    uint32_t num_pages = file_len_ / k_page_size;
+    char* page = new char[kPageSize];
+    uint32_t num_pages = file_len_ / kPageSize;
 
-    if (file_len_ % k_page_size != 0) {
+    if (file_len_ % kPageSize != 0) {
       num_pages++;
     }
 
     if (page_num < num_pages) {
       ssize_t bytes_read =
-          pread(fd_, page, k_page_size, page_num * k_page_size);
+          pread(fd_, page, kPageSize, page_num * kPageSize);
       if (bytes_read == -1) {
         // TODO(natsunoyoru97): Use glog to replace the cout
         std::cout << "Fail to read the file\n";
@@ -110,7 +112,7 @@ const char* Pager::GetPage(uint32_t page_num) {
   return pages_[page_num];
 }
 
-void Pager::Flush(uint32_t page_start, uint32_t page_num_to_flush) {
+void Pager::Flush(uint32_t page_start) {
   if (pages_[page_start] == nullptr) {
     // TODO(natsunoyoru97): Use glog to replace the cout
     std::cout << "Tried to flush null page\n";
@@ -119,8 +121,8 @@ void Pager::Flush(uint32_t page_start, uint32_t page_num_to_flush) {
   }
 
   ssize_t bytes_written =
-      pwrite(fd_, pages_[page_start], page_num_to_flush * k_page_size,
-             page_start * k_page_size);
+      pwrite(fd_, pages_[page_start], kPageSize,
+             page_start * kPageSize);
 
   if (bytes_written == -1) {
     // TODO(natsunoyoru97): Use glog to replace the cout
