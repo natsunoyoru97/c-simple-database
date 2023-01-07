@@ -1,4 +1,39 @@
+DB_GCC_EXCEPTIONS_FLAGS = {
+    "-fexceptions"
+}
+
+DB_GCC_FLAGS = {
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Wcast-qual",
+    "-Wconversion-null",
+    "-Wmissing-declarations",
+    "-Woverlength-strings",
+    "-Wpointer-arith",
+    "-Wunused-local-typedefs",
+    "-Wunused-result",
+    "-Wvarargs",
+    "-Wvla",
+    "-Wwrite-strings",
+    "-Wno-missing-field-initializers",
+    "-Wno-sign-compare"
+}
+
+DB_GCC_TEST_FLAGS = {
+    "-std=c++17",
+    "-Wno-conversion-null",
+    "-Wno-deprecated-declarations",
+    "-Wno-missing-declarations",
+    "-Wno-sign-compare",
+    "-Wno-unused-function",
+    "-Wno-unused-parameter",
+    "-Wno-unused-private-field"
+}
+
+
 set_languages("c++17")
+set_toolchain("cxx", "g++")
 
 add_requires("abseil", "doctest", "gtest ~1.12.1", "glog", "gflags")
 add_rules("mode.debug", "mode.release")
@@ -8,14 +43,14 @@ target("target")
     add_files("src/*.cpp")
     add_packages("abseil", "glog", "gflags")
     set_warnings("all", "error")
-    add_cxxflags("-pedantic")
+    add_cxxflags(DB_GCC_FLAGS, DB_GCC_EXCEPTIONS_FLAGS)
 
 target("test")
     set_kind("binary")
     add_files("test/*.cc")
     add_packages("gtest")
     set_warnings("all", "error")
-    add_cxxflags("-pedantic")
+    add_cxxflags(DB_GCC_TEST_FLAGS, DB_GCC_EXCEPTIONS_FLAGS)
 
 --
 -- If you want to known more usage about xmake, please see https://xmake.io
