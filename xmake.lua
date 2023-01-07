@@ -1,4 +1,80 @@
+DB_LLVM_EXCEPTIONS_FLAGS = {
+    "-fexceptions",
+}
+
+DB_LLVM_FLAGS = {
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Weverything",
+    "-Wno-c++98-compat-pedantic",
+    "-Wno-conversion",
+    "-Wno-covered-switch-default",
+    "-Wno-deprecated",
+    "-Wno-disabled-macro-expansion",
+    "-Wno-double-promotion",
+    "-Wno-comma",
+    "-Wno-extra-semi",
+    "-Wno-extra-semi-stmt",
+    "-Wno-packed",
+    "-Wno-padded",
+    "-Wno-sign-compare",
+    "-Wno-float-conversion",
+    "-Wno-float-equal",
+    "-Wno-format-nonliteral",
+    "-Wno-gcc-compat",
+    "-Wno-global-constructors",
+    "-Wno-exit-time-destructors",
+    "-Wno-nested-anon-types",
+    "-Wno-non-modular-include-in-module",
+    "-Wno-old-style-cast",
+    "-Wno-range-loop-analysis",
+    "-Wno-reserved-id-macro",
+    "-Wno-shorten-64-to-32",
+    "-Wno-switch-enum",
+    "-Wno-thread-safety-negative",
+    "-Wno-unknown-warning-option",
+    "-Wno-unreachable-code",
+    "-Wno-unused-macros",
+    "-Wno-weak-vtables",
+    "-Wno-zero-as-null-pointer-constant",
+    "-Wbitfield-enum-conversion",
+    "-Wbool-conversion",
+    "-Wconstant-conversion",
+    "-Wenum-conversion",
+    "-Wint-conversion",
+    "-Wliteral-conversion",
+    "-Wnon-literal-null-conversion",
+    "-Wnull-conversion",
+    "-Wobjc-literal-conversion",
+    "-Wno-sign-conversion",
+    "-Wstring-conversion",
+    "-Wthread-safety",
+}
+
+DB_LLVM_TEST_FLAGS = {
+    "-std=c++17",
+    "-Wno-c99-extensions",
+    "-Wno-deprecated-declarations",
+    "-Wno-missing-noreturn",
+    "-Wno-missing-prototypes",
+    "-Wno-missing-variable-declarations",
+    "-Wno-null-conversion",
+    "-Wno-shadow",
+    "-Wno-shift-sign-overflow",
+    "-Wno-sign-compare",
+    "-Wno-unused-function",
+    "-Wno-unused-member-function",
+    "-Wno-unused-parameter",
+    "-Wno-unused-private-field",
+    "-Wno-unused-template",
+    "-Wno-used-but-marked-unused",
+    "-Wno-zero-as-null-pointer-constant",
+    "-Wno-gnu-zero-variadic-macro-arguments",
+}
+
 set_languages("c++17")
+set_toolset("cxx", "clang++")
 
 add_requires("abseil", "doctest", "gtest ~1.12.1", "glog", "gflags")
 add_rules("mode.debug", "mode.release")
@@ -7,6 +83,8 @@ target("target")
     set_kind("binary")
     add_files("src/*.cpp")
     add_packages("abseil", "glog", "gflags")
+    set_warnings("all", "error")
+    add_cxxflags(DB_LLVM_FLAGS, DB_LLVM_EXCEPTIONS_FLAGS)
 
 target("pager")
     set_kind("static")
@@ -20,6 +98,8 @@ target("test")
     set_kind("binary")
     add_files("test/*.cc")
     add_packages("gtest")
+    set_warnings("all", "error")
+    add_cxxflags(DB_LLVM_TEST_FLAGS, DB_LLVM_EXCEPTIONS_FLAGS)
 
 --
 -- If you want to known more usage about xmake, please see https://xmake.io
