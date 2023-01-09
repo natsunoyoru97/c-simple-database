@@ -3,6 +3,7 @@
 // Created by natsunoyoru on 23-1-2.
 //
 
+// TODO(natsunoyoru97): the NOLINT should be removed
 #include "pager.h"  // NOLINT
 
 #include <fcntl.h>
@@ -37,9 +38,7 @@ Pager::Pager(const char* filename) {
     pages_[i] = nullptr;
   }
 
-  uint32_t num_rows = (file_len_ % rowSize == 0) ? file_len_ / rowSize
-                                                  : file_len_ / rowSize + 1;
-  num_rows_ = num_rows;
+  num_rows_ = (file_len_ - 1) / rowSize + 1;
 }
   
 Pager* Pager::InitPager(const char* filename) {
@@ -47,9 +46,7 @@ Pager* Pager::InitPager(const char* filename) {
 }
 
 Pager::~Pager() {
-  uint32_t num_full_pages = (num_rows_ % rowsPerPage == 0)
-                                ? num_rows_ / rowsPerPage
-                                : num_rows_ / rowsPerPage + 1;
+  uint32_t num_full_pages = (num_rows_ - 1) / rowsPerPage + 1;
 
   for (uint32_t i = 0; i < num_full_pages; ++i) {
     if (pages_[i] == nullptr) {

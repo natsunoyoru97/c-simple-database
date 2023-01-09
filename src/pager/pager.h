@@ -27,6 +27,7 @@ class Pager {
   // while to see if it is in need for future
   uint32_t num_rows_;
   // TODO(natsunoyoru97): how about using other data structures?
+  // TODO(natsunoyoru97): also considering about using disk space
   std::array<char*, TABLE_MAX_PAGES> pages_;
   Pager(const char* filename);
 
@@ -37,6 +38,7 @@ class Pager {
   // Get a page from the data cache
   const char* GetPage(uint32_t page_num);
   // Write data to the data cache
+  // TODO(natsunoyoru97): it will return a Status object
   void Flush(uint32_t page_start);
 };
 
