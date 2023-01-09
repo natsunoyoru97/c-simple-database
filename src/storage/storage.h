@@ -16,9 +16,9 @@ namespace storage {
 class Table {
  private:
   Pager* pager_;
-  Table(const char* filename);
-
+  
  public:
+  Table() = delete;
   static Table* InitTable(const char* filename);
   ~Table() = default;
   // A getter of a row of a page

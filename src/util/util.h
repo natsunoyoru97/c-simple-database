@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+#include <cassert>
 #include <cstdio>
 #include <cstdint>
 #include <iostream>

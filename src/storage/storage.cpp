@@ -4,18 +4,14 @@
 //
 
 #include "storage.h"  // NOLINT
+#include "../pager/pager.cpp"
 
 namespace storage {
-  
-  Table::Table(const char* filename) {
-    Pager* pager = Pager::InitPager(filename);
-    pager_ = pager;
-  }
   
 // TODO(natsunoyoru97): What's the use of the page_num here?
 // A: the page_num should not be in the Table object.
 Table* Table::InitTable(const char* filename) {
-  Table* tbl;
+  Table* tbl = nullptr;
   Pager* pager = Pager::InitPager(filename);
   tbl->pager_ = pager;
 

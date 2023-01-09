@@ -14,27 +14,9 @@
 #include "../util/util.h"
 
 namespace storage {
-  /*
-  Pager::Pager(const char* filename) {
-    int fd = open(filename, O_RDWR | O_CREAT, S_IWUSR | S_IRUSR);
-
-    off_t file_len = lseek(fd, 0, SEEK_END);
-    std::cout << file_len << "\n";
-
-    fd_ = fd;
-    file_len_ = file_len;
-
-    for (uint32_t i = 0; i < TABLE_MAX_PAGES; ++i) {
-      pages_[i] = nullptr;
-    }
-
-    uint32_t num_rows = (file_len_ % rowSize == 0) ? file_len_ / rowSize
-                                                    : file_len_ / rowSize + 1;
-    num_rows_ = num_rows;
-  }
-*/
+  
 Pager* Pager::InitPager(const char* filename) {
-  Pager* pager;
+  Pager* pager = nullptr;
   int fd = open(filename, O_RDWR | O_CREAT, S_IWUSR | S_IRUSR);
 
   // TODO(natsunoyoru97): propogate error status

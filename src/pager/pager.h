@@ -21,14 +21,13 @@ namespace storage {
 class Pager {
  private:
   int fd_;
-  off_t file_len_;
+  uint32_t file_len_;
   // Rows this block of memory has
   // NOTE(natsunoyoru97): I would like to remain this member variable for a
   // while to see if it is in need for future
   uint32_t num_rows_;
   // TODO(natsunoyoru97): how about using other data structures?
   std::array<char*, TABLE_MAX_PAGES> pages_;
-  //Pager(const char* filename);
 
  public:
   Pager() = delete;

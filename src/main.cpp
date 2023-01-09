@@ -13,7 +13,7 @@
 DEFINE_string(test, "simple database", "the flag for test");
 
 // Tokenizer that takes the space as the delimiter
-std::vector<std::string> Tokenize(const std::string& s) {
+static std::vector<std::string> Tokenize(const std::string& s) {
   std::vector<std::string> tokens;
   std::string curr;
   for (char c : s) {
@@ -35,7 +35,7 @@ std::vector<std::string> Tokenize(const std::string& s) {
   return tokens;
 }
 
-void Select(const std::vector<std::string>& params) {
+static void Select(const std::vector<std::string>& params) {
   std::cout << "This is select function." << std::endl;
 
   for (const std::string& s : params) {
@@ -44,15 +44,15 @@ void Select(const std::vector<std::string>& params) {
   std::cout << "\n";
 }
 
-void Insert(const std::vector<std::string>& params) {
-  std::cout << "This is insert function." << std::endl;
+static void Insert(const std::vector<std::string>& params) {
+  std::cout << "This is insert function: " << params[0] << " " << std::endl;
 }
 
-void Delete(const std::vector<std::string>& params) {
-  std::cout << "This is delete function." << std::endl;
+static void Delete(const std::vector<std::string>& params) {
+  std::cout << "This is delete function." << params[0] << " " << std::endl;
 }
 
-void ExecuteDb(const std::string& command,
+static void ExecuteDb(const std::string& command,
                const std::vector<std::string>& params) {
   if (command == "select") {
     Select(params);
@@ -82,25 +82,19 @@ void ExecuteDb(const std::string& command,
   }
 }
 
-// The signal handler for SIGPIPE
-void DoNothing(int signum) {
-  std::cout << "SIGPIPE"
-            << "\n"; /* Ignore SIGPIPE */
-}
-
 // TODO(natsunoyoru97): redirect glog to stderr
-void InitGlog(const char* argv0) { google::InitGoogleLogging(argv0); }
+static void InitGlog(const char* argv0) { google::InitGoogleLogging(argv0); }
 
-void InitGflags() {
+static void InitGflags() {
   // TODO(natsunoyoru97): Use glog to replace the cout
   std::cout << FLAGS_test << "\n";
 }
 
 int main(int argc, char** argv) {
-  /* TODO(natsunoyoru97): It seems that the result is not as expected.
-   It is a bug to fix.
-   */
-  std::signal(SIGPIPE, DoNothing);
+  std::cout << argc << "\n";
+  assert(argc > 1);
+  
+  std::signal(SIGPIPE, SIG_IGN);
 
   InitGlog(argv[0]);
   InitGflags();
