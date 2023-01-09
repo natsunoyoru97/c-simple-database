@@ -22,6 +22,3 @@ TEST(StorageTest, CtorWorks) {
 }
 
 TEST(StorageTest, DtorWorks) {}
-
-// Tests for Pager
-TEST(PagerTest, CtorWorks) {}

@@ -123,6 +123,7 @@ void Pager::Flush(uint32_t page_start) {
     exit(EXIT_FAILURE);
   }
 
+  // TODO(natsunoyoru97): the bytes to allocate may be greater than the space!
   ssize_t bytes_written =
       pwrite(fd_, pages_[page_start], kPageSize,
              page_start * kPageSize);

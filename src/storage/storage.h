@@ -21,7 +21,6 @@ class Table {
  public:
   static Table* InitTable(const char* filename);
   ~Table() = default;
-  // A getter of a row of a page
   // TODO(natsunoyoru97): It is assumed to be a *getter* and it should not
   // return a writable object
   const char* GetRowSlot(uint32_t row_num);
