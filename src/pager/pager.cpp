@@ -14,9 +14,8 @@
 #include "../util/util.h"
 
 namespace storage {
-  
-Pager* Pager::InitPager(const char* filename) {
-  Pager* pager = nullptr;
+
+Pager::Pager(const char* filename) {
   int fd = open(filename, O_RDWR | O_CREAT, S_IWUSR | S_IRUSR);
 
   // TODO(natsunoyoru97): propogate error status
@@ -30,18 +29,21 @@ Pager* Pager::InitPager(const char* filename) {
   // TODO(natsunoyoru97): consider about the case that the file is created and it is 0
   off_t file_len = lseek(fd, 0, SEEK_END);
 
-  pager->fd_ = fd;
-  pager->file_len_ = file_len;
+  fd_ = fd;
+  file_len_ = file_len;
+  //std::cout << file_len_ << "\n";
 
   for (uint32_t i = 0; i < TABLE_MAX_PAGES; ++i) {
-    pager->pages_[i] = nullptr;
+    pages_[i] = nullptr;
   }
 
-  uint32_t num_rows = (pager->file_len_ % rowSize == 0) ? pager->file_len_ / rowSize
-                                                  : pager->file_len_ / rowSize + 1;
-  pager->num_rows_ = num_rows;
-
-  return pager;
+  uint32_t num_rows = (file_len_ % rowSize == 0) ? file_len_ / rowSize
+                                                  : file_len_ / rowSize + 1;
+  num_rows_ = num_rows;
+}
+  
+Pager* Pager::InitPager(const char* filename) {
+  return new Pager(filename);
 }
 
 Pager::~Pager() {

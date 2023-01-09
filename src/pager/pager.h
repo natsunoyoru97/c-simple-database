@@ -28,9 +28,9 @@ class Pager {
   uint32_t num_rows_;
   // TODO(natsunoyoru97): how about using other data structures?
   std::array<char*, TABLE_MAX_PAGES> pages_;
+  Pager(const char* filename);
 
  public:
-  Pager() = delete;
   static Pager* InitPager(const char* filename);
   ~Pager();
 

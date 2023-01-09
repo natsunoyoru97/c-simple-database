@@ -17,7 +17,7 @@ TEST(QueryTest, DeleteWorks) {}
 
 // Tests for Storage
 TEST(StorageTest, CtorWorks) {
-    storage::Table* tbl = storage::Table::InitTable("../datafile/basic.db");
+    storage::Table* tbl = storage::Table::InitTable("./basic.db");
     tbl->GetRowSlot(1);
 }
 

@@ -7,15 +7,13 @@
 #include "../pager/pager.cpp"
 
 namespace storage {
-  
-// TODO(natsunoyoru97): What's the use of the page_num here?
-// A: the page_num should not be in the Table object.
-Table* Table::InitTable(const char* filename) {
-  Table* tbl = nullptr;
-  Pager* pager = Pager::InitPager(filename);
-  tbl->pager_ = pager;
 
-  return tbl;
+Table::Table(const char* filename) {
+  pager_ = Pager::InitPager(filename);
+}
+  
+Table* Table::InitTable(const char* filename) {
+  return new Table(filename);
 }
 
 const char* Table::GetRowSlot(uint32_t row_num) {
