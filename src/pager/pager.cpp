@@ -6,7 +6,7 @@
 #include "pager.h"  // NOLINT
 
 #include <fcntl.h>
-#include <unistd.h>
+
 
 #include <cstdlib>
 #include <iostream>
@@ -14,6 +14,25 @@
 #include "../util/util.h"
 
 namespace storage {
+  /*
+  Pager::Pager(const char* filename) {
+    int fd = open(filename, O_RDWR | O_CREAT, S_IWUSR | S_IRUSR);
+
+    off_t file_len = lseek(fd, 0, SEEK_END);
+    std::cout << file_len << "\n";
+
+    fd_ = fd;
+    file_len_ = file_len;
+
+    for (uint32_t i = 0; i < TABLE_MAX_PAGES; ++i) {
+      pages_[i] = nullptr;
+    }
+
+    uint32_t num_rows = (file_len_ % rowSize == 0) ? file_len_ / rowSize
+                                                    : file_len_ / rowSize + 1;
+    num_rows_ = num_rows;
+  }
+*/
 Pager* Pager::InitPager(const char* filename) {
   Pager* pager;
   int fd = open(filename, O_RDWR | O_CREAT, S_IWUSR | S_IRUSR);
@@ -33,11 +52,11 @@ Pager* Pager::InitPager(const char* filename) {
   pager->file_len_ = file_len;
 
   for (uint32_t i = 0; i < TABLE_MAX_PAGES; ++i) {
-    pages_[i] = nullptr;
+    pager->pages_[i] = nullptr;
   }
 
-  uint32_t num_rows = (file_len_ % rowSize == 0) ? file_len_ / rowSize
-                                                  : file_len_ / rowSize + 1;
+  uint32_t num_rows = (pager->file_len_ % rowSize == 0) ? pager->file_len_ / rowSize
+                                                  : pager->file_len_ / rowSize + 1;
   pager->num_rows_ = num_rows;
 
   return pager;

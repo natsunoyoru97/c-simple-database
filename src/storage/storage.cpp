@@ -5,24 +5,22 @@
 
 #include "storage.h"  // NOLINT
 
-#include <fcntl.h>
-#include <unistd.h>
-
-#include <cstdio>
-#include <iostream>
-
-#include "../util/util.h"
-
 namespace storage {
-
+  
+  Table::Table(const char* filename) {
+    Pager* pager = Pager::InitPager(filename);
+    pager_ = pager;
+  }
+  
 // TODO(natsunoyoru97): What's the use of the page_num here?
 // A: the page_num should not be in the Table object.
-Table::Table(const char* filename) {
+Table* Table::InitTable(const char* filename) {
+  Table* tbl;
   Pager* pager = Pager::InitPager(filename);
-  pager_ = pager;
-}
+  tbl->pager_ = pager;
 
-Table::~Table() {}
+  return tbl;
+}
 
 const char* Table::GetRowSlot(uint32_t row_num) {
   uint32_t page_num = row_num / rowsPerPage;
