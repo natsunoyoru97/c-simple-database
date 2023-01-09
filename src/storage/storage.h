@@ -5,7 +5,6 @@
 #ifndef SRC_STORAGE_STORAGE_H_
 #define SRC_STORAGE_STORAGE_H_
 
-#include "../util/util.h"
 #include "../pager/pager.h"
 
 namespace storage {
@@ -16,8 +15,8 @@ namespace storage {
 class Table {
  private:
   Pager* pager_;
-  Table(const char* filename);
-  
+  explicit Table(const char* filename);
+
  public:
   static Table* InitTable(const char* filename);
   ~Table() = default;

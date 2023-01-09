@@ -53,7 +53,7 @@ static void Delete(const std::vector<std::string>& params) {
 }
 
 static void ExecuteDb(const std::string& command,
-               const std::vector<std::string>& params) {
+                      const std::vector<std::string>& params) {
   if (command == "select") {
     Select(params);
   } else if (command == "insert") {
@@ -93,7 +93,7 @@ static void InitGflags() {
 int main(int argc, char** argv) {
   std::cout << argc << "\n";
   assert(argc > 1);
-  
+
   std::signal(SIGPIPE, SIG_IGN);
 
   InitGlog(argv[0]);

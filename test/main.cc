@@ -1,7 +1,9 @@
 // Copyright 2022 natsunoyoru97
 
 #include <gtest/gtest.h>
-#include "../src/storage/storage.cpp"
+
+#include "../src/pager/pager.h"
+#include "../src/storage/storage.h"
 
 TEST(DatabaseTest, EchoWorks) { EXPECT_STRNE("hello", "world"); }
 
@@ -17,8 +19,8 @@ TEST(QueryTest, DeleteWorks) {}
 
 // Tests for Storage
 TEST(StorageTest, CtorWorks) {
-    storage::Table* tbl = storage::Table::InitTable("./basic.db");
-    tbl->GetRowSlot(1);
+  storage::Table* tbl = storage::Table::InitTable("./basic.db");
+  tbl->GetRowSlot(1);
 }
 
 TEST(StorageTest, DtorWorks) {}

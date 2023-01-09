@@ -12,5 +12,7 @@ constexpr uint32_t kPageSize = 256;
 constexpr uint32_t rowsPerPage = 100;
 // The size of bytes a row has
 constexpr uint32_t rowSize = 100;
+// Maximum pages a table stores
+constexpr uint32_t TABLE_MAX_PAGES = 1024;
 
 #endif  // SRC_CONFIG_CONFIG_H_

@@ -8,11 +8,8 @@
 
 #include <fcntl.h>
 
-
 #include <cstdlib>
 #include <iostream>
-
-#include "../util/util.h"
 
 namespace storage {
 
@@ -27,12 +24,13 @@ Pager::Pager(const char* filename) {
     exit(EXIT_FAILURE);
   }
 
-  // TODO(natsunoyoru97): consider about the case that the file is created and it is 0
+  // TODO(natsunoyoru97): consider about the case that the file is created and
+  // it is 0
   off_t file_len = lseek(fd, 0, SEEK_END);
 
   fd_ = fd;
   file_len_ = file_len;
-  //std::cout << file_len_ << "\n";
+  // std::cout << file_len_ << "\n";
 
   for (uint32_t i = 0; i < TABLE_MAX_PAGES; ++i) {
     pages_[i] = nullptr;
@@ -40,10 +38,8 @@ Pager::Pager(const char* filename) {
 
   num_rows_ = (file_len_ - 1) / rowSize + 1;
 }
-  
-Pager* Pager::InitPager(const char* filename) {
-  return new Pager(filename);
-}
+
+Pager* Pager::InitPager(const char* filename) { return new Pager(filename); }
 
 Pager::~Pager() {
   uint32_t num_full_pages = (num_rows_ - 1) / rowsPerPage + 1;
@@ -96,8 +92,7 @@ const char* Pager::GetPage(uint32_t page_num) {
     }
 
     if (page_num < num_pages) {
-      ssize_t bytes_read =
-          pread(fd_, page, kPageSize, page_num * kPageSize);
+      ssize_t bytes_read = pread(fd_, page, kPageSize, page_num * kPageSize);
       if (bytes_read == -1) {
         // TODO(natsunoyoru97): Use glog to replace the cout
         std::cout << "Fail to read the file\n";
@@ -122,8 +117,7 @@ void Pager::Flush(uint32_t page_start) {
 
   // TODO(natsunoyoru97): the bytes to allocate may be greater than the space!
   ssize_t bytes_written =
-      pwrite(fd_, pages_[page_start], kPageSize,
-             page_start * kPageSize);
+      pwrite(fd_, pages_[page_start], kPageSize, page_start * kPageSize);
 
   if (bytes_written == -1) {
     // TODO(natsunoyoru97): Use glog to replace the cout

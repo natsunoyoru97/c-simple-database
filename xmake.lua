@@ -100,7 +100,8 @@ target("test")
     add_packages("gtest")
     set_warnings("all", "error")
     add_cxxflags(DB_LLVM_TEST_FLAGS, DB_LLVM_EXCEPTIONS_FLAGS)
-
+    add_deps("storage", "pager")
+    
 --
 -- If you want to known more usage about xmake, please see https://xmake.io
 --

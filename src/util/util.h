@@ -6,19 +6,12 @@
 #ifndef SRC_UTIL_UTIL_H_
 #define SRC_UTIL_UTIL_H_
 
-#include <unistd.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 #include <cassert>
-#include <cstdio>
 #include <cstdint>
+#include <cstdio>
 #include <iostream>
-
-// The size of bytes a page has
-constexpr uint32_t kPageSize = 256;
-// The fixed-size of rows that contains in a page
-constexpr uint32_t rowsPerPage = 100;
-// The size of bytes a row has
-constexpr uint32_t rowSize = 100;
 
 #endif  // SRC_UTIL_UTIL_H_

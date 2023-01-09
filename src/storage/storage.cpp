@@ -5,17 +5,12 @@
 
 // TODO(natsunoyoru97): the NOLINT should be removed
 #include "storage.h"  // NOLINT
-#include "../pager/pager.cpp"
 
 namespace storage {
 
-Table::Table(const char* filename) {
-  pager_ = Pager::InitPager(filename);
-}
-  
-Table* Table::InitTable(const char* filename) {
-  return new Table(filename);
-}
+Table::Table(const char* filename) { pager_ = Pager::InitPager(filename); }
+
+Table* Table::InitTable(const char* filename) { return new Table(filename); }
 
 const char* Table::GetRowSlot(uint32_t row_num) {
   uint32_t page_num = row_num / rowsPerPage;

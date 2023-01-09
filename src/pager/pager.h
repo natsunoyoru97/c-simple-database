@@ -9,13 +9,14 @@
 #include <array>
 #include <cstdint>
 
+#include "../config/config.h"
 #include "../util/util.h"
 
-// Maximum pages a table stores
-constexpr uint32_t TABLE_MAX_PAGES = 1024;
-
 namespace storage {
-  // TODO(natsunopyoru97): add a handler for file operation
+// TODO(natsunopyoru97): add a handler for file operation
+
+// An additional layer for the Pager object to handle the file descriptor
+class FileHandler {};
 
 // The indirection layer to handle file descriptor and give a block of memory
 class Pager {
@@ -29,7 +30,7 @@ class Pager {
   // TODO(natsunoyoru97): how about using other data structures?
   // TODO(natsunoyoru97): also considering about using disk space
   std::array<char*, TABLE_MAX_PAGES> pages_;
-  Pager(const char* filename);
+  explicit Pager(const char* filename);
 
  public:
   static Pager* InitPager(const char* filename);
