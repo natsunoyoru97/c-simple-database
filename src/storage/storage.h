@@ -20,9 +20,9 @@ class Table {
  public:
   static Table* InitTable(const char* filename);
   ~Table() = default;
-  // TODO(natsunoyoru97): It is assumed to be a *getter* and it should not
-  // return a writable object
   const char* GetRowSlot(uint32_t row_num);
+  // TODO(natsunoyoru97): This function should return a Status
+  void SetRowSlot(uint32_t row_num);
 };
 
 }  // namespace storage
