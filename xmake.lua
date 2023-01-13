@@ -1,3 +1,7 @@
+DB_LLVM_ASAN_FLAGS = {
+    "-fsanitize=address",
+}
+
 DB_LLVM_EXCEPTIONS_FLAGS = {
     "-fexceptions",
 }
@@ -85,6 +89,7 @@ target("target")
     add_packages("abseil", "glog", "gflags")
     set_warnings("all", "error")
     add_cxxflags(DB_LLVM_FLAGS, DB_LLVM_EXCEPTIONS_FLAGS)
+    add_ldflags(DB_LLVM_ASAN_FLAGS)
 
 target("test")
     set_kind("binary")
@@ -92,6 +97,7 @@ target("test")
     add_packages("gtest")
     set_warnings("all", "error")
     add_cxxflags(DB_LLVM_TEST_FLAGS, DB_LLVM_EXCEPTIONS_FLAGS)
+    add_ldflags(DB_LLVM_ASAN_FLAGS)
 
 --
 -- If you want to known more usage about xmake, please see https://xmake.io
