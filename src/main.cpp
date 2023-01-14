@@ -62,7 +62,7 @@ void ExecuteDb(const std::string& command,
   } else if (command == "delete") {
     Delete(params);
   } else if (command == "exit") {
-    LOG(INFO) << "Are you sure to exit? y/n"
+    std::cout << "Are you sure to exit? y/n"
               << "\n";
     while (true) {
       std::string c;
@@ -70,16 +70,19 @@ void ExecuteDb(const std::string& command,
       std::transform(c.begin(), c.end(), c.begin(), ::tolower);
 
       if (c == "y") {
-        LOG(INFO) << "Exit from the simple database cli." << std::endl;
+        std::cout << "Exit from the simple database cli."
+                  << "\n";
         exit(0);
       }
       if (c == "n") {
-        LOG(INFO) << "Cancel to exit." << std::endl;
+        std::cout << "Cancel to exit."
+                  << "\n";
         break;
       }
     }
   } else {
-    LOG(INFO) << "Invalid command." << std::endl;
+    std::cout << "Invalid command."
+              << "\n";
   }
 }
 
