@@ -12,8 +12,9 @@
 
 DEFINE_string(test, "simple database", "the flag for test");
 
+namespace {
 // Tokenizer that takes the space as the delimiter
-static std::vector<std::string> Tokenize(const std::string& s) {
+std::vector<std::string> Tokenize(const std::string& s) {
   std::vector<std::string> tokens;
   std::string curr;
   for (char c : s) {
@@ -35,7 +36,7 @@ static std::vector<std::string> Tokenize(const std::string& s) {
   return tokens;
 }
 
-static void Select(const std::vector<std::string>& params) {
+void Select(const std::vector<std::string>& params) {
   LOG(INFO) << "This is select function." << std::endl;
 
   for (const std::string& s : params) {
@@ -44,15 +45,15 @@ static void Select(const std::vector<std::string>& params) {
   LOG(INFO) << "\n";
 }
 
-static void Insert(const std::vector<std::string>& params) {
+void Insert(const std::vector<std::string>& params) {
   LOG(INFO) << "This is insert function." << params[0] << std::endl;
 }
 
-static void Delete(const std::vector<std::string>& params) {
+void Delete(const std::vector<std::string>& params) {
   LOG(INFO) << "This is delete function." << params[0] << std::endl;
 }
 
-static void ExecuteDb(const std::string& command,
+void ExecuteDb(const std::string& command,
                const std::vector<std::string>& params) {
   if (command == "select") {
     Select(params);
@@ -82,19 +83,19 @@ static void ExecuteDb(const std::string& command,
   }
 }
 
-static void InitGlog(const char* argv0) {
+void InitGlog(const char* argv0) {
   google::InitGoogleLogging(argv0);
   FLAGS_logtostderr = 1;
 }
 
 // The string should bind to the stderr
-static void TestGlog() {
-  LOG(INFO) << "The string should bind to the stderr in glog format." << "\n";
+void TestGlog() {
+  LOG(INFO) << "The string should bind to the stderr in glog format."
+            << "\n";
 }
 
-static void InitGflags() {
-  LOG(INFO) << FLAGS_test << "\n";
-}
+void InitGflags() { LOG(INFO) << FLAGS_test << "\n"; }
+}  // namespace
 
 int main(int argc, char** argv) {
   /* TODO(natsunoyoru97): It seems that the result is not as expected.
