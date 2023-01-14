@@ -88,16 +88,9 @@ void ExecuteDb(const std::string& command,
 
 void InitGlog(const char* argv0) {
   google::InitGoogleLogging(argv0);
-  FLAGS_logtostderr = 1;
+  FLAGS_logtostderr = true;
 }
 
-// The string should bind to the stderr
-void TestGlog() {
-  LOG(INFO) << "The string should bind to the stderr in glog format."
-            << "\n";
-}
-
-void InitGflags() { std::cout << FLAGS_test << "\n"; }
 }  // namespace
 
 int main(int argc, char** argv) {
