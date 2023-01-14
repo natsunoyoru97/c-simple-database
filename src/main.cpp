@@ -94,7 +94,7 @@ void TestGlog() {
             << "\n";
 }
 
-void InitGflags() { LOG(INFO) << FLAGS_test << "\n"; }
+void InitGflags() { std::cout << FLAGS_test << "\n"; }
 }  // namespace
 
 int main(int argc, char** argv) {
@@ -107,7 +107,7 @@ int main(int argc, char** argv) {
   TestGlog();
   InitGflags();
 
-  LOG(INFO) << argc << "\n";
+  std::cout << argc << "\n";
 
   while (true) {
     std::string command;
