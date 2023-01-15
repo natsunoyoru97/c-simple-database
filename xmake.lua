@@ -83,13 +83,17 @@ set_toolset("cxx", "clang++")
 add_requires("abseil", "doctest", "gtest ~1.12.1", "glog", "gflags")
 add_rules("mode.debug", "mode.release")
 
+option("asan")
+    set_default(false)
+    set_showmenu(true)
+    add_ldflags(DB_LLVM_ASAN_FLAGS)
+
 target("target")
     set_kind("binary")
     add_files("src/*.cpp")
     add_packages("abseil", "glog", "gflags")
     set_warnings("all", "error")
-    add_cxxflags(DB_LLVM_FLAGS, DB_LLVM_EXCEPTIONS_FLAGS)
-    add_ldflags(DB_LLVM_ASAN_FLAGS)
+    add_options("asan")
 
 target("test")
     set_kind("binary")
@@ -97,7 +101,7 @@ target("test")
     add_packages("gtest")
     set_warnings("all", "error")
     add_cxxflags(DB_LLVM_TEST_FLAGS, DB_LLVM_EXCEPTIONS_FLAGS)
-    add_ldflags(DB_LLVM_ASAN_FLAGS)
+    add_options("asan")
 
 --
 -- If you want to known more usage about xmake, please see https://xmake.io
