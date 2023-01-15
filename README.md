@@ -28,8 +28,9 @@ xmake run test
 xmake run -d test
 ```
 
-## Get Started With asan
-You can also enable address sanitizer(asan) for this project. 
+## Enable/Disable asan
+You can also enable address sanitizer(asan) for this project.
+The option is DISABLED on default.
 
 - Enable asan: 
 ```shell
@@ -40,6 +41,7 @@ xmake f --asan=y
 xmake f --asan=n
 ```
 
+Note it is a CONFIGURATION option and you don't need to pass the flag every time you build the project. 
 After reconfiguration, you should rebuild the project.
 
 ### Setup pre-push hook
