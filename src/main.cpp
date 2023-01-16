@@ -100,9 +100,6 @@ int main(int argc, char** argv) {
   std::signal(SIGPIPE, SIG_IGN);
 
   InitGlog(argv[0]);
-  TestGlog();
-  InitGflags();
-
   std::cout << argc << "\n";
 
   while (true) {
