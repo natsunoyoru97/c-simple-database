@@ -16,15 +16,16 @@ namespace storage {
 
 // An additional layer for the Pager object to handle the file descriptor
 class FileHandler {
-  private:
-    int fd_;
-    uint32_t file_len_;
-    FileHandler(const char* filename);
-  public:
-    static FileHandler* InitFileHandler(const char* filename);
-    ~FileHandler();
-    uint32_t GetFileLen();
-    int GetFd();
+ private:
+  int fd_;
+  uint32_t file_len_;
+  explicit FileHandler(const char* filename);
+
+ public:
+  static FileHandler* InitFileHandler(const char* filename);
+  ~FileHandler();
+  uint32_t GetFileLen();
+  int GetFd();
 };
 
 // The indirection layer to handle file descriptor and give a block of memory
@@ -48,8 +49,6 @@ class Pager {
   // Write data to the data cache
   // TODO(natsunoyoru97): it will return a Status object
   void Flush(uint32_t page_start);
-
-  void FreePage();
 };
 
 }  // namespace storage

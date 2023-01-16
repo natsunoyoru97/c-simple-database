@@ -47,13 +47,9 @@ FileHandler* FileHandler::InitFileHandler(const char* filename) {
   return new FileHandler(filename);
 }
 
-uint32_t FileHandler::GetFileLen() {
-  return file_len_;
-}
+uint32_t FileHandler::GetFileLen() { return file_len_; }
 
-int FileHandler::GetFd() {
-  return fd_;
-}
+int FileHandler::GetFd() { return fd_; }
 
 Pager::Pager(const char* filename) {
   file_handler_ = FileHandler::InitFileHandler(filename);
@@ -64,7 +60,7 @@ Pager::Pager(const char* filename) {
 Pager* Pager::InitPager(const char* filename) { return new Pager(filename); }
 
 Pager::~Pager() {
-  //uint32_t num_full_pages = (num_rows_ - 1) / rowsPerPage + 1;
+  // uint32_t num_full_pages = (num_rows_ - 1) / rowsPerPage + 1;
   delete file_handler_;
   for (int i = 0; i < TABLE_MAX_PAGES; ++i) {
     if (pages_[i] != nullptr) {
@@ -92,7 +88,8 @@ const char* Pager::GetPage(uint32_t page_num) {
     }
 
     if (page_num < num_pages) {
-      ssize_t bytes_read = pread(file_handler_->GetFd(), page, kPageSize, page_num * kPageSize);
+      ssize_t bytes_read =
+          pread(file_handler_->GetFd(), page, kPageSize, page_num * kPageSize);
       if (bytes_read == -1) {
         // TODO(natsunoyoru97): Use glog to replace the cout
         std::cout << "Fail to read the file\n";
@@ -116,8 +113,8 @@ void Pager::Flush(uint32_t page_start) {
   }
 
   // TODO(natsunoyoru97): the bytes to allocate may be greater than the space!
-  ssize_t bytes_written =
-      pwrite(file_handler_->GetFd(), pages_[page_start], kPageSize, page_start * kPageSize);
+  ssize_t bytes_written = pwrite(file_handler_->GetFd(), pages_[page_start],
+                                 kPageSize, page_start * kPageSize);
 
   if (bytes_written == -1) {
     // TODO(natsunoyoru97): Use glog to replace the cout
