@@ -18,9 +18,15 @@ TEST(QueryTest, InsertWorks) {}
 TEST(QueryTest, DeleteWorks) {}
 
 // Tests for Storage
-TEST(StorageTest, CtorWorks) {
+void init() {
   storage::Table* tbl = storage::Table::InitTable("./basic.db");
+  std::cerr << sizeof(tbl) << "\n";
   tbl->GetRowSlot(1);
+  delete tbl;
+}
+
+TEST(StorageTest, CtorWorks) {
+  init();
 }
 
 TEST(StorageTest, DtorWorks) {}

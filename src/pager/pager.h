@@ -13,19 +13,26 @@
 #include "../util/util.h"
 
 namespace storage {
-// TODO(natsunopyoru97): add a handler for file operation
 
 // An additional layer for the Pager object to handle the file descriptor
-class FileHandler {};
+class FileHandler {
+  private:
+    int fd_;
+    uint32_t file_len_;
+    FileHandler(const char* filename);
+  public:
+    static FileHandler* InitFileHandler(const char* filename);
+    ~FileHandler();
+    uint32_t GetFileLen();
+    int GetFd();
+};
 
 // The indirection layer to handle file descriptor and give a block of memory
 class Pager {
  private:
-  int fd_;
+  FileHandler* file_handler_;
   uint32_t file_len_;
   // Rows this block of memory has
-  // NOTE(natsunoyoru97): I would like to remain this member variable for a
-  // while to see if it is in need for future
   uint32_t num_rows_;
   // TODO(natsunoyoru97): how about using other data structures?
   // TODO(natsunoyoru97): also considering about using disk space
@@ -41,6 +48,8 @@ class Pager {
   // Write data to the data cache
   // TODO(natsunoyoru97): it will return a Status object
   void Flush(uint32_t page_start);
+
+  void FreePage();
 };
 
 }  // namespace storage

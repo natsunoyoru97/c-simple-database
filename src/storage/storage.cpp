@@ -12,6 +12,8 @@ Table::Table(const char* filename) { pager_ = Pager::InitPager(filename); }
 
 Table* Table::InitTable(const char* filename) { return new Table(filename); }
 
+Table::~Table() { delete pager_; }
+
 const char* Table::GetRowSlot(uint32_t row_num) {
   uint32_t page_num = row_num / rowsPerPage;
   const char* page = pager_->GetPage(page_num);

@@ -93,6 +93,7 @@ target("target")
     add_files("src/*.cpp")
     add_packages("abseil", "glog", "gflags")
     set_warnings("all", "error")
+    add_deps("storage", "pager")
     add_options("asan")
 
 target("pager")
@@ -110,7 +111,6 @@ target("test")
     set_warnings("all", "error")
     add_cxxflags(DB_LLVM_TEST_FLAGS, DB_LLVM_EXCEPTIONS_FLAGS)
     add_deps("storage", "pager")
-    
     add_options("asan")
 
 --
