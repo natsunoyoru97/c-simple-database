@@ -1,9 +1,18 @@
 // Copyright 2022 natsunoyoru97
 
+#include <gflags/gflags.h>
+#include <glog/logging.h>
+
 #include <algorithm>
+#include <csignal>
 #include <iostream>
 #include <vector>
 
+#include "absl/strings/str_join.h"
+
+DEFINE_string(test, "simple database", "the flag for test");
+
+namespace {
 // Tokenizer that takes the space as the delimiter
 std::vector<std::string> Tokenize(const std::string& s) {
   std::vector<std::string> tokens;
@@ -28,20 +37,20 @@ std::vector<std::string> Tokenize(const std::string& s) {
 }
 
 void Select(const std::vector<std::string>& params) {
-  std::cout << "This is select function." << std::endl;
+  LOG(INFO) << "This is select function." << std::endl;
 
   for (const std::string& s : params) {
-    std::cout << s << " ";
+    LOG(INFO) << s << " ";
   }
-  std::cout << "\n";
+  LOG(INFO) << "\n";
 }
 
 void Insert(const std::vector<std::string>& params) {
-  std::cout << "This is insert function." << std::endl;
+  LOG(INFO) << "This is insert function." << params[0] << std::endl;
 }
 
 void Delete(const std::vector<std::string>& params) {
-  std::cout << "This is delete function." << std::endl;
+  LOG(INFO) << "This is delete function." << params[0] << std::endl;
 }
 
 void ExecuteDb(const std::string& command,
@@ -61,21 +70,37 @@ void ExecuteDb(const std::string& command,
       std::transform(c.begin(), c.end(), c.begin(), ::tolower);
 
       if (c == "y") {
-        std::cout << "Exit from the simple database cli." << std::endl;
+        std::cout << "Exit from the simple database cli."
+                  << "\n";
         exit(0);
       }
       if (c == "n") {
-        std::cout << "Cancel to exit." << std::endl;
+        std::cout << "Cancel to exit."
+                  << "\n";
         break;
       }
     }
   } else {
-    std::cout << "Invalid command." << std::endl;
+    std::cout << "Invalid command."
+              << "\n";
   }
 }
 
+void InitGlog(const char* argv0) {
+  google::InitGoogleLogging(argv0);
+  FLAGS_logtostderr = true;
+}
+
+}  // namespace
+
 int main(int argc, char** argv) {
-  std::cout << "Simple database" << std::endl;
+  /* TODO(natsunoyoru97): It seems that the result is not as expected.
+   It is a bug to fix.
+   */
+  std::signal(SIGPIPE, SIG_IGN);
+
+  InitGlog(argv[0]);
+  std::cout << argc << "\n";
 
   while (true) {
     std::string command;
@@ -85,7 +110,7 @@ int main(int argc, char** argv) {
     std::string param;
 
     getline(std::cin, param);
-    std::cout << param << "\n";
+    LOG(INFO) << param << "\n";
 
     ExecuteDb(command, Tokenize(param));
   }
