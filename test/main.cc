@@ -30,8 +30,8 @@ TEST(UtilsTest, StatusWorks) {
   EXPECT_NE(IsBoolTrue(false).ok(), true);
 }
 
-TEST(UtilsTest, StatusOrWorks) { 
-  EXPECT_EQ(IsStringAlpha("abc").ok(), true); 
+TEST(UtilsTest, StatusOrWorks) {
+  EXPECT_EQ(IsStringAlpha("abc").ok(), true);
   EXPECT_NE(IsStringAlpha("abc1").ok(), true);
 }
 
