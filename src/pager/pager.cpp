@@ -30,8 +30,7 @@ FileHandler::FileHandler(const char* filename) {
   if (fd != -1) {
     off_t file_len = lseek(fd, 0, SEEK_END);
     file_len_ = file_len;
-  }
-  else {
+  } else {
     file_len_ = -1;
   }
 }
