@@ -18,7 +18,7 @@ namespace storage {
 class FileHandler {
  private:
   int fd_;
-  uint32_t file_len_;
+  int32_t file_len_;
   explicit FileHandler(const char* filename);
 
  public:
@@ -43,6 +43,7 @@ class Pager {
  public:
   static Pager* InitPager(const char* filename);
   ~Pager();
+  FileHandler* GetFileHandler();
 
   // Get a page from the data cache
   const char* GetPage(uint32_t page_num);

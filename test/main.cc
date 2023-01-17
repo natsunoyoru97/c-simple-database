@@ -5,10 +5,6 @@
 #include "../src/pager/pager.h"
 #include "../src/storage/storage.h"
 
-TEST(DatabaseTest, EchoWorks) { EXPECT_STRNE("hello", "world"); }
-
-TEST(DatabaseTest, AddWorks) { EXPECT_STREQ("hello", "hello"); }
-
 // Tests for query execution
 
 TEST(QueryTest, SelectWorks) {}
@@ -17,13 +13,27 @@ TEST(QueryTest, InsertWorks) {}
 
 TEST(QueryTest, DeleteWorks) {}
 
-// Tests for Storage
+// Tests for FileHandler
 
-TEST(StorageTest, CtorWorks) {
-  storage::Table* tbl = storage::Table::InitTable("./basic.db");
-  std::cerr << sizeof(tbl) << "\n";
-  tbl->GetRowSlot(1);
+TEST(FileHandlerTest, OpenFileWorks) {
+  storage::Table* tbl = storage::Table::InitTable("basic.db");
+  int fd = tbl->GetPager()->GetFileHandler()->GetFd();
+  EXPECT_NE(fd, -1);
   delete tbl;
 }
 
-TEST(StorageTest, DtorWorks) {}
+TEST(FileHandlerTest, OpenFileErrorWorks) {
+  storage::Table* tbl = storage::Table::InitTable("../datafile/notExists.db");
+  int fd = tbl->GetPager()->GetFileHandler()->GetFd();
+  EXPECT_EQ(fd, -1);
+  delete tbl;
+}
+
+// Tests for Storage
+
+TEST(StorageTest, GetRowSlotWorks) {
+  storage::Table* tbl = storage::Table::InitTable("./basic.db");
+  const char* page = tbl->GetRowSlot(1);
+  EXPECT_EQ(sizeof(page), 8);
+  delete tbl;
+}

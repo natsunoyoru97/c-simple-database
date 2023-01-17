@@ -14,33 +14,36 @@
 namespace storage {
 
 FileHandler::FileHandler(const char* filename) {
-  int fd = open(filename, O_RDWR | O_CREAT, S_IWUSR | S_IRUSR);
+  int fd = open(filename, O_RDWR | O_APPEND, S_IWUSR | S_IRUSR);
 
   // TODO(natsunoyoru97): propogate error status
+  /*
   if (fd == -1) {
-    // TODO(natsunoyoru97): Use glog to replace the cout
     std::cout << "Fail to open the file\n";
-    // TODO(natsunoyoru97): Use Status/StatusOr instead
     exit(EXIT_FAILURE);
   }
-
+  */
   fd_ = fd;
 
   // TODO(natsunoyoru97): consider about the case that the file is created and
   // it is 0
-  off_t file_len = lseek(fd, 0, SEEK_END);
-  file_len_ = file_len;
-  std::cout << file_len_ << "\n";
+  if (fd != -1) {
+    off_t file_len = lseek(fd, 0, SEEK_END);
+    file_len_ = file_len;
+  }
+  else {
+    file_len_ = -1;
+  }
 }
 
 FileHandler::~FileHandler() {
   int ret = close(fd_);
+  /*
   if (ret == -1) {
-    // TODO(natsunoyoru97): Use glog to replace the cout
     std::cout << "Fail to close db file\n";
-    // TODO(natsunoyoru97): Use Status/StatusOr instead
     exit(EXIT_FAILURE);
   }
+  */
 }
 
 FileHandler* FileHandler::InitFileHandler(const char* filename) {
@@ -69,11 +72,11 @@ Pager::~Pager() {
   }
 }
 
+FileHandler* Pager::GetFileHandler() { return file_handler_; }
+
 const char* Pager::GetPage(uint32_t page_num) {
   if (page_num >= TABLE_MAX_PAGES) {
-    // TODO(natsunoyoru97): Use glog to replace the cout
     std::cout << "Tried to fetch page number out of bounds.\n";
-    // TODO(natsunoyoru97): Use Status/StatusOr instead
     exit(EXIT_FAILURE);
   }
 
@@ -91,9 +94,7 @@ const char* Pager::GetPage(uint32_t page_num) {
       ssize_t bytes_read =
           pread(file_handler_->GetFd(), page, kPageSize, page_num * kPageSize);
       if (bytes_read == -1) {
-        // TODO(natsunoyoru97): Use glog to replace the cout
         std::cout << "Fail to read the file\n";
-        // TODO(natsunoyoru97): Use Status/StatusOr instead
         exit(EXIT_FAILURE);
       }
     }
@@ -106,9 +107,7 @@ const char* Pager::GetPage(uint32_t page_num) {
 
 void Pager::Flush(uint32_t page_start) {
   if (pages_[page_start] == nullptr) {
-    // TODO(natsunoyoru97): Use glog to replace the cout
     std::cout << "Tried to flush null page\n";
-    // TODO(natsunoyoru97): Use Status/StatusOr instead
     exit(EXIT_FAILURE);
   }
 
@@ -117,9 +116,7 @@ void Pager::Flush(uint32_t page_start) {
                                  kPageSize, page_start * kPageSize);
 
   if (bytes_written == -1) {
-    // TODO(natsunoyoru97): Use glog to replace the cout
     std::cout << "Fail to write to db\n";
-    // TODO(natsunoyoru97): Use Status/StatusOr instead
     exit(EXIT_FAILURE);
   }
 }
