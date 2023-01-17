@@ -88,6 +88,10 @@ option("asan")
     set_showmenu(true)
     add_ldflags(DB_LLVM_ASAN_FLAGS)
 
+target("status")
+    set_kind("static")
+    add_files("src/utils/status_code.cc")
+
 target("target")
     set_kind("binary")
     add_files("src/*.cpp")
@@ -102,6 +106,7 @@ target("test")
     set_warnings("all", "error")
     add_cxxflags(DB_LLVM_TEST_FLAGS, DB_LLVM_EXCEPTIONS_FLAGS)
     add_options("asan")
+    add_deps("status")
 
 --
 -- If you want to known more usage about xmake, please see https://xmake.io

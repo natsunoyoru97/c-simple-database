@@ -1,10 +1,23 @@
-// Status code used to represent error, see https://grpc.github.io/grpc/core/md_doc_statuscodes.html
+// Copyright 2023 natsunoyoru97
+//
+// Created by natsunoyoru on 23-1-17.
+//
+// Status code used to represent error, see
+// https://grpc.github.io/grpc/core/md_doc_statuscodes.html
+
+#ifndef SRC_UTILS_STATUS_H_
+#define SRC_UTILS_STATUS_H_
 
 #pragma once
 
+#include <memory>
+#include <string>
+#include <unordered_map>
+#include <utility>
+
+#include "status_code.h"
+
 namespace utils {
-
-
 
 class Status;
 namespace internal {
@@ -110,4 +123,6 @@ class RuntimeStatusError : public std::runtime_error {
   Status status_;
 };
 
-} namespace utils
+}  // namespace utils
+
+#endif  // SRC_UTILS_STATUS_H_
