@@ -15,10 +15,10 @@ TEST(DatabaseTest, AddWorks) { EXPECT_STREQ("hello", "hello"); }
 
 // Test for Utils
 absl::Status IsBoolTrue(bool b) {
-  return (b) ? absl::OkStatus() : absl::InvalidArgumentError("b is not true");
+  return (b) ? absl::OkStatus() : absl::InvalidArgumentError("b is not true.");
 }
 
-absl::StatusOr<std::string> IsStringAlpha(const std::string&& s) {
+absl::StatusOr<std::string> IsStringAlpha(std::string&& s) {
   return std::all_of(s.cbegin(), s.cend(), isalpha)
              ? absl::StatusOr<std::string>(s)
              : absl::StatusOr<std::string>(absl::InvalidArgumentError(
