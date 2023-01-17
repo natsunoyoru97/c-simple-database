@@ -15,7 +15,7 @@
 #include <unordered_map>
 #include <utility>
 
-#include "status_code.h"
+#include "status_code.h" //NOLINT
 
 namespace utils {
 
