@@ -18,7 +18,7 @@ absl::Status IsBoolTrue(bool b) {
   return (b) ? absl::OkStatus() : absl::InvalidArgumentError("b is not true.");
 }
 
-absl::StatusOr<std::string> IsStringAlpha(std::string&& s) {
+absl::StatusOr<std::string> IsStringAlpha(std::string s) {
   return std::all_of(s.cbegin(), s.cend(), isalpha)
              ? absl::StatusOr<std::string>(s)
              : absl::StatusOr<std::string>(absl::InvalidArgumentError(
@@ -26,13 +26,13 @@ absl::StatusOr<std::string> IsStringAlpha(std::string&& s) {
 }
 
 TEST(UtilsTest, StatusWorks) {
-  EXPECT_EQ(IsBoolTrue(true).ok(), true);
-  EXPECT_NE(IsBoolTrue(false).ok(), true);
+  EXPECT_TRUE(IsBoolTrue(true).ok());
+  EXPECT_FALSE(IsBoolTrue(false).ok());
 }
 
 TEST(UtilsTest, StatusOrWorks) {
-  EXPECT_EQ(IsStringAlpha("abc").ok(), true);
-  EXPECT_NE(IsStringAlpha("abc1").ok(), true);
+  EXPECT_TRUE(IsStringAlpha("abc").ok());
+  EXPECT_FALSE(IsStringAlpha("abc1").ok());
 }
 
 // Tests for query execution
