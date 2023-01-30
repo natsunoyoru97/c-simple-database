@@ -15,10 +15,10 @@ namespace storage {
 class Table {
  private:
   Pager* pager_;
-  explicit Table(const char* filename);
+  explicit Table(Pager* pager);
 
  public:
-  static Table* InitTable(const char* filename);
+  static absl::StatusOr<Table*> InitTable(const char* filename);
   ~Table();
   Pager* GetPager();
   const char* GetRowSlot(uint32_t row_num);

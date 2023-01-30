@@ -3,14 +3,20 @@
 // Created by natsunoyoru on 22-12-31.
 //
 
-// TODO(natsunoyoru97): the NOLINT should be removed
 #include "storage.h"  // NOLINT
+
+#include <cstdint>
 
 namespace storage {
 
-Table::Table(const char* filename) { pager_ = Pager::InitPager(filename); }
+Table::Table(Pager* pager) { pager_ = pager; }
 
-Table* Table::InitTable(const char* filename) { return new Table(filename); }
+absl::StatusOr<Table*> Table::InitTable(const char* filename) {
+  absl::StatusOr<Pager*> result = Pager::InitPager(filename);
+  return result.ok() ? absl::StatusOr<Table*>(new Table(*result))
+                     : absl::StatusOr<Table*>(
+                           absl::FailedPreconditionError("Fail to init Pager"));
+}
 
 Pager* Table::GetPager() { return pager_; }
 

@@ -83,6 +83,7 @@ add_rules("mode.debug", "mode.release")
 
 -- Pre-compiled Abseil is NOT PREFERRED, see https://github.com/abseil/abseil-cpp/blob/master/FAQ.md#what-is-abi-and-why-dont-you-recommend-using-a-pre-compiled-version-of-abseil.
 -- Abseil should be built with the flag "-std=c++17", see https://github.com/abseil/abseil-cpp/issues/819.
+-- TODO: Any better solution?
 package("abseil")
     add_urls("https://github.com/abseil/abseil-cpp/archive/$(version).tar.gz",
              "https://github.com/abseil/abseil-cpp.git")
@@ -133,7 +134,7 @@ option("asan")
 target("target")
     set_toolchains("clang")
     set_kind("binary")
-    add_files("src/*.cpp")
+    add_files("src/main.cpp")
     add_packages("abseil", "glog", "gflags")
     set_warnings("all", "error")
     add_deps("storage", "pager")
@@ -142,16 +143,19 @@ target("target")
 
 target("pager")
     set_kind("static")
+    add_packages("abseil")
     add_files("src/pager/pager.cpp")
 
 target("storage")
     set_kind("static")
+    add_packages("abseil")
+    add_deps("pager")
     add_files("src/storage/storage.cpp")
 
 target("test")
     set_toolchains("clang")
     set_kind("binary")
-    add_files("test/*.cc")
+    add_files("test/main.cc")
     add_packages("abseil", "gtest")
     set_warnings("all", "error")
     add_cxxflags(DB_LLVM_TEST_FLAGS, DB_LLVM_EXCEPTIONS_FLAGS)

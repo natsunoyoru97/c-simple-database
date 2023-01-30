@@ -6,11 +6,10 @@
 
 #include <cstdio>
 
-#include "absl/status/status.h"
-#include "absl/status/statusor.h"
-
 #include "../src/pager/pager.h"
 #include "../src/storage/storage.h"
+#include "absl/status/status.h"
+#include "absl/status/statusor.h"
 
 // Test for Utils
 absl::Status IsBoolTrue(bool b) {
@@ -45,24 +44,30 @@ TEST(QueryTest, DeleteWorks) {}
 // Tests for FileHandler
 
 TEST(FileHandlerTest, OpenFileWorks) {
-  storage::Table* tbl = storage::Table::InitTable("basic.db");
-  int fd = tbl->GetPager()->GetFileHandler()->GetFd();
-  EXPECT_NE(fd, -1);
+  absl::StatusOr<storage::Table*> result =
+      storage::Table::InitTable("./basic.db");
+  EXPECT_TRUE(result.ok());
+
+  storage::Table* tbl = *result;
   delete tbl;
 }
 
 TEST(FileHandlerTest, OpenFileErrorWorks) {
-  storage::Table* tbl = storage::Table::InitTable("../datafile/notExists.db");
-  int fd = tbl->GetPager()->GetFileHandler()->GetFd();
-  EXPECT_EQ(fd, -1);
-  delete tbl;
+  absl::StatusOr<storage::Table*> result =
+      storage::Table::InitTable("../datafile/notExists.db");
+  EXPECT_FALSE(result.ok());
 }
 
 // Tests for Storage
 
 TEST(StorageTest, GetRowSlotWorks) {
-  storage::Table* tbl = storage::Table::InitTable("./basic.db");
+  absl::StatusOr<storage::Table*> result =
+      storage::Table::InitTable("./basic.db");
+  EXPECT_TRUE(result.ok());
+
+  storage::Table* tbl = *result;
   const char* page = tbl->GetRowSlot(1);
   EXPECT_EQ(sizeof(page), 8);
+
   delete tbl;
 }

@@ -11,6 +11,8 @@
 
 #include "../config/config.h"
 #include "../util/util.h"
+#include "absl/status/status.h"
+#include "absl/status/statusor.h"
 
 namespace storage {
 
@@ -19,10 +21,10 @@ class FileHandler {
  private:
   int fd_;
   int32_t file_len_;
-  explicit FileHandler(const char* filename);
+  explicit FileHandler(const char* filename, int fd);
 
  public:
-  static FileHandler* InitFileHandler(const char* filename);
+  static absl::StatusOr<FileHandler*> InitFileHandler(const char* filename);
   ~FileHandler();
   uint32_t GetFileLen();
   int GetFd();
@@ -38,18 +40,17 @@ class Pager {
   // TODO(natsunoyoru97): how about using other data structures?
   // TODO(natsunoyoru97): also considering about using disk space
   std::array<char*, TABLE_MAX_PAGES> pages_;
-  explicit Pager(const char* filename);
+  explicit Pager(const char* filename, FileHandler* file_handler);
 
  public:
-  static Pager* InitPager(const char* filename);
+  static absl::StatusOr<Pager*> InitPager(const char* filename);
   ~Pager();
   FileHandler* GetFileHandler();
 
   // Get a page from the data cache
   const char* GetPage(uint32_t page_num);
   // Write data to the data cache
-  // TODO(natsunoyoru97): it will return a Status object
-  void Flush(uint32_t page_start);
+  absl::Status Flush(uint32_t page_start);
 };
 
 }  // namespace storage

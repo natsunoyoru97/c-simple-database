@@ -93,12 +93,6 @@ void InitGlog(const char* argv0) {
   FLAGS_logtostderr = true;
 }
 
-void TestStorage() {
-  storage::Table* tbl = storage::Table::InitTable("./basic.db");
-  std::cerr << sizeof(tbl) << "\n";
-  tbl->GetRowSlot(1);
-}
-
 }  // namespace
 
 int main(int argc, char** argv) {
@@ -109,8 +103,6 @@ int main(int argc, char** argv) {
 
   InitGlog(argv[0]);
   std::cout << argc << "\n";
-
-  TestStorage();
 
   // while (true) {
   std::string command;
