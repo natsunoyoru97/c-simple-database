@@ -22,8 +22,6 @@ class Table {
   ~Table();
   Pager* GetPager();
   const char* GetRowSlot(uint32_t row_num);
-  // TODO(natsunoyoru97): This function should return a Status
-  void SetRowSlot(uint32_t row_num);
 };
 
 }  // namespace storage

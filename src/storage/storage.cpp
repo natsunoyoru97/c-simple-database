@@ -25,14 +25,4 @@ const char* Table::GetRowSlot(uint32_t row_num) {
   return page + byte_offset;
 }
 
-void Table::SetRowSlot(uint32_t row_num) {
-  uint32_t page_num = row_num / rowsPerPage;
-  /*
-  const char* page = pager_->GetPage(page_num);
-  uint32_t row_offset = row_num % rowsPerPage;
-  uint32_t byte_offset = row_offset * rowSize;
-  */
-  pager_->Flush(page_num);
-}
-
 }  // namespace storage
