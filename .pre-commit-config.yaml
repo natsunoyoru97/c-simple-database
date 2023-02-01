@@ -17,3 +17,5 @@ repos:
         entry: cpplint
         language: system
         stages: [push]
+        # libraries like <thread> are not accepted by cpplint and it's this is a preference of the Chromium team
+        args: ['--filter="-build/c++11"']
