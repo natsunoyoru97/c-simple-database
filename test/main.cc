@@ -83,7 +83,7 @@ TEST(StorageTest, IncRowCntAtomicWorks) {
   storage::Pager* pager = tbl->GetPager();
   uint32_t cnt = pager->GetNumRows();
 
-  for (int i = 0; i < 10; ++i) {
+  for (int i = 0; i < 10000; ++i) {
     std::thread t1(&storage::Pager::IncRowCntByOne, pager);
     std::thread t2(&storage::Pager::IncRowCntByOne, pager);
 
