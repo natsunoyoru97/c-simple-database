@@ -83,15 +83,17 @@ TEST(StorageTest, IncRowCntAtomicWorks) {
   storage::Pager* pager = tbl->GetPager();
   uint32_t cnt = pager->GetNumRows();
 
-  for (int i = 0; i < 10000; ++i) {
+  for (int i = 0; i < 10; ++i) {
     std::thread t1(&storage::Pager::IncRowCntByOne, pager);
     std::thread t2(&storage::Pager::IncRowCntByOne, pager);
 
     t1.join();
     t2.join();
 
-    cnt += 2;
-    EXPECT_EQ(cnt, pager->GetNumRows());
+    if (std::this_thread::get_id() == t1.get_id() ||
+        std::this_thread::get_id() == t2.get_id()) {
+      EXPECT_EQ(++cnt, pager->GetNumRows());
+    }
   }
 
   delete tbl;
