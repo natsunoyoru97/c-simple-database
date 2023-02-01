@@ -16,6 +16,7 @@ FileHandler::FileHandler(const char* filename, int fd) {
   fd_ = fd;
   // TODO(natsunoyoru97): consider about the case that the file is created and
   // it is 0
+  // Hold on. Its value seems to be large.
   off_t file_len = lseek(fd, 0, SEEK_END);
   file_len_ = file_len;
 }
@@ -113,5 +114,14 @@ absl::Status Pager::Flush(uint32_t page_start) {
   }
 
   return absl::OkStatus();
+}
+
+void Pager::IncRowCntByOne() {
+  std::lock_guard<std::mutex> guard(pager_mutex_);
+  num_rows_++;
+}
+
+uint32_t Pager::GetNumRows() {
+  return num_rows_;
 }
 }  // namespace storage

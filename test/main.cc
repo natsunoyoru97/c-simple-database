@@ -4,7 +4,9 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+#include <cstdint>
 #include <cstdio>
+#include <thread>
 
 #include "../src/pager/pager.h"
 #include "../src/storage/storage.h"
@@ -68,6 +70,29 @@ TEST(StorageTest, GetRowSlotWorks) {
   storage::Table* tbl = *result;
   const char* page = tbl->GetRowSlot(1);
   EXPECT_EQ(sizeof(page), 8);
+
+  delete tbl;
+}
+
+TEST(StorageTest, IncRowCntAtomicWorks) {
+  absl::StatusOr<storage::Table*> result =
+      storage::Table::InitTable("./basic.db");
+  EXPECT_TRUE(result.ok());
+
+  storage::Table* tbl = *result;
+  storage::Pager* pager = tbl->GetPager();
+  uint32_t cnt = pager->GetNumRows();
+
+  for (int i = 0; i < 10000; ++i) {
+    std::thread t1(&storage::Pager::IncRowCntByOne, pager);
+    std::thread t2(&storage::Pager::IncRowCntByOne, pager);
+
+    t1.join();
+    t2.join();
+
+    cnt += 2;
+    EXPECT_EQ(cnt, pager->GetNumRows());
+  }
 
   delete tbl;
 }

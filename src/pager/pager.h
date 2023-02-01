@@ -8,6 +8,7 @@
 
 #include <array>
 #include <cstdint>
+#include <mutex>
 
 #include "../config/config.h"
 #include "../util/util.h"
@@ -37,6 +38,7 @@ class Pager {
   uint32_t file_len_;
   // Rows this block of memory has
   uint32_t num_rows_;
+  std::mutex pager_mutex_;
   // TODO(natsunoyoru97): how about using other data structures?
   // TODO(natsunoyoru97): also considering about using disk space
   std::array<char*, TABLE_MAX_PAGES> pages_;
@@ -51,6 +53,11 @@ class Pager {
   const char* GetPage(uint32_t page_num);
   // Write data to the data cache
   absl::Status Flush(uint32_t page_start);
+  // Increase the num_rows_ by one.
+  // Note it is assumed to provide guarantee for CONCURRENCY
+  void IncRowCntByOne();
+  // Get num_rows_
+  uint32_t GetNumRows();
 };
 
 }  // namespace storage
