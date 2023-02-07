@@ -9,12 +9,14 @@
 #include <vector>
 
 #include "absl/strings/str_join.h"
+#include "pager/pager.h"
+#include "storage/storage.h"
 
 DEFINE_string(test, "simple database", "the flag for test");
 
 namespace {
 // Tokenizer that takes the space as the delimiter
-std::vector<std::string> Tokenize(const std::string& s) {
+static std::vector<std::string> Tokenize(const std::string& s) {
   std::vector<std::string> tokens;
   std::string curr;
   for (char c : s) {
@@ -53,8 +55,8 @@ void Delete(const std::vector<std::string>& params) {
   LOG(INFO) << "This is delete function." << params[0] << std::endl;
 }
 
-void ExecuteDb(const std::string& command,
-               const std::vector<std::string>& params) {
+static void ExecuteDb(const std::string& command,
+                      const std::vector<std::string>& params) {
   if (command == "select") {
     Select(params);
   } else if (command == "insert") {
@@ -102,16 +104,16 @@ int main(int argc, char** argv) {
   InitGlog(argv[0]);
   std::cout << argc << "\n";
 
-  while (true) {
-    std::string command;
-    std::cin >> command;
+  // while (true) {
+  std::string command;
+  std::cin >> command;
 
-    std::vector<std::string> params;
-    std::string param;
+  std::vector<std::string> params;
+  std::string param;
 
-    getline(std::cin, param);
-    LOG(INFO) << param << "\n";
+  getline(std::cin, param);
+  LOG(INFO) << param << "\n";
 
-    ExecuteDb(command, Tokenize(param));
-  }
+  ExecuteDb(command, Tokenize(param));
+  //}
 }
