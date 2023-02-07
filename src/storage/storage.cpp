@@ -28,7 +28,7 @@ absl::StatusOr<const char*> Table::GetRowSlot(uint32_t row_num) {
   if (!page.ok()) {
     return page;
   }
-  
+
   uint32_t row_offset = row_num % rowsPerPage;
   uint32_t byte_offset = row_offset * rowSize;
 
