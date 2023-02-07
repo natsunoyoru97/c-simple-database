@@ -17,10 +17,8 @@ FileHandler::FileHandler(const char* filename, int fd) {
   fd_ = fd;
   // TODO(natsunoyoru97): consider about the case that the file is created and
   // it is 0
-  // Hold on. Its value seems to be large.
   off_t file_len = lseek(fd_, 0, SEEK_END);
   file_len_ = file_len;
-  std::cerr << file_len_ << "\n";
 }
 
 FileHandler::~FileHandler() {
@@ -58,9 +56,9 @@ absl::StatusOr<Pager*> Pager::InitPager(const char* filename) {
 
 Pager::~Pager() {
   // uint32_t num_full_pages = (num_rows_ - 1) / rowsPerPage + 1;
-  delete file_handler_;
   for (int i = 0; i < TABLE_MAX_PAGES; ++i) {
     if (pages_[i] != nullptr) {
+      // Flush the cache to the disk when closing the database
       absl::Status result = Flush(i);
       if (!result.ok()) {
         LOG(ERROR) << "Failed to flush to the page " << i << " - " << result
@@ -70,6 +68,8 @@ Pager::~Pager() {
       delete[] pages_[i];
     }
   }
+
+  delete file_handler_;
 }
 
 FileHandler* Pager::GetFileHandler() { return file_handler_; }
@@ -79,7 +79,6 @@ absl::StatusOr<const char*> Pager::GetPage(uint32_t page_num) {
     return absl::StatusOr<const char*>(absl::FailedPreconditionError(
         "Tried to fetch page number out of bounds"));
   }
-  std::cerr << file_len_ << "\n";
 
   if (pages_[page_num] == nullptr) {
     // TODO(natsunoyoru97): Make page an ADT
@@ -112,12 +111,11 @@ absl::Status Pager::Flush(uint32_t page_start) {
   }
 
   // TODO(natsunoyoru97): the bytes to allocate may be greater than the space!
-  std::cerr << file_handler_->GetFd() << "\n";
   ssize_t bytes_written = pwrite(file_handler_->GetFd(), pages_[page_start],
                                  kPageSize, page_start * kPageSize);
 
   if (bytes_written == -1) {
-    return absl::AbortedError("Fail to write to the database");
+    return absl::AbortedError("Failed to write to the database");
   }
 
   return absl::OkStatus();

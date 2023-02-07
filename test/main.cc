@@ -68,9 +68,11 @@ TEST(StorageTest, GetRowSlotWorks) {
   EXPECT_TRUE(result.ok());
 
   storage::Table* tbl = *result;
-  absl::StatusOr<const char*> page = tbl->GetRowSlot(100);
-  EXPECT_TRUE(page.ok());
-  EXPECT_EQ(sizeof(page), 8);
+  for (int i = 0; i < 10; ++i) {
+    absl::StatusOr<const char*> page = tbl->GetOneRowSlot(i);
+    EXPECT_TRUE(page.ok());
+    EXPECT_EQ(sizeof(*page), 8);
+  }
 
   delete tbl;
 }
@@ -99,3 +101,5 @@ TEST(StorageTest, IncRowCntAtomicWorks) {
 
   delete tbl;
 }
+
+TEST(StorageTest, PageFlushWorks) {}
