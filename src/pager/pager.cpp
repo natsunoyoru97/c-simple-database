@@ -6,6 +6,7 @@
 #include "pager.h"  //NOLINT
 
 #include <fcntl.h>
+#include <glog/logging.h>
 
 #include <cstdlib>
 #include <iostream>
@@ -17,14 +18,15 @@ FileHandler::FileHandler(const char* filename, int fd) {
   // TODO(natsunoyoru97): consider about the case that the file is created and
   // it is 0
   // Hold on. Its value seems to be large.
-  off_t file_len = lseek(fd, 0, SEEK_END);
+  off_t file_len = lseek(fd_, 0, SEEK_END);
   file_len_ = file_len;
+  std::cerr << file_len_ << "\n";
 }
 
 FileHandler::~FileHandler() {
   int ret = close(fd_);
   if (ret == -1) {
-    std::cout << "Fail to close db file\n";
+    LOG(ERROR) << "Fail to close db file\n";
     exit(EXIT_FAILURE);
   }
 }
@@ -59,6 +61,12 @@ Pager::~Pager() {
   delete file_handler_;
   for (int i = 0; i < TABLE_MAX_PAGES; ++i) {
     if (pages_[i] != nullptr) {
+      absl::Status result = Flush(i);
+      if (!result.ok()) {
+        LOG(ERROR) << "Failed to flush to the page " << i << " - " << result
+                   << "\n";
+      }
+
       delete[] pages_[i];
     }
   }
@@ -66,11 +74,12 @@ Pager::~Pager() {
 
 FileHandler* Pager::GetFileHandler() { return file_handler_; }
 
-const char* Pager::GetPage(uint32_t page_num) {
+absl::StatusOr<const char*> Pager::GetPage(uint32_t page_num) {
   if (page_num >= TABLE_MAX_PAGES) {
-    std::cout << "Tried to fetch page number out of bounds.\n";
-    exit(EXIT_FAILURE);
+    return absl::StatusOr<const char*>(absl::FailedPreconditionError(
+        "Tried to fetch page number out of bounds"));
   }
+  std::cerr << file_len_ << "\n";
 
   if (pages_[page_num] == nullptr) {
     // TODO(natsunoyoru97): Make page an ADT
@@ -86,31 +95,29 @@ const char* Pager::GetPage(uint32_t page_num) {
       ssize_t bytes_read =
           pread(file_handler_->GetFd(), page, kPageSize, page_num * kPageSize);
       if (bytes_read == -1) {
-        std::cout << "Fail to read the file\n";
-        exit(EXIT_FAILURE);
+        return absl::StatusOr<const char*>(
+            absl::AbortedError("Failed to read the file"));
       }
     }
 
     pages_[page_num] = page;
   }
 
-  return pages_[page_num];
+  return absl::StatusOr<const char*>(pages_[page_num]);
 }
 
 absl::Status Pager::Flush(uint32_t page_start) {
   if (pages_[page_start] == nullptr) {
-    std::cout << "Tried to flush null page\n";
-    exit(EXIT_FAILURE);
+    return absl::FailedPreconditionError("Tried to flush to a null page");
   }
 
   // TODO(natsunoyoru97): the bytes to allocate may be greater than the space!
+  std::cerr << file_handler_->GetFd() << "\n";
   ssize_t bytes_written = pwrite(file_handler_->GetFd(), pages_[page_start],
                                  kPageSize, page_start * kPageSize);
 
   if (bytes_written == -1) {
-    std::cout << "Fail to write to db\n";
-    exit(EXIT_FAILURE);
-    return absl::FailedPreconditionError("Fail to write to the database");
+    return absl::AbortedError("Fail to write to the database");
   }
 
   return absl::OkStatus();
@@ -121,7 +128,5 @@ void Pager::IncRowCntByOne() {
   num_rows_++;
 }
 
-uint32_t Pager::GetNumRows() {
-  return num_rows_;
-}
+uint32_t Pager::GetNumRows() { return num_rows_; }
 }  // namespace storage

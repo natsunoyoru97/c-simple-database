@@ -21,7 +21,7 @@ class Table {
   static absl::StatusOr<Table*> InitTable(const char* filename);
   ~Table();
   Pager* GetPager();
-  const char* GetRowSlot(uint32_t row_num);
+  absl::StatusOr<const char*> GetRowSlot(uint32_t row_num);
 };
 
 }  // namespace storage

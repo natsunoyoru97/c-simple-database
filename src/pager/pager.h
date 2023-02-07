@@ -50,7 +50,7 @@ class Pager {
   FileHandler* GetFileHandler();
 
   // Get a page from the data cache
-  const char* GetPage(uint32_t page_num);
+  absl::StatusOr<const char*> GetPage(uint32_t page_num);
   // Write data to the data cache
   absl::Status Flush(uint32_t page_start);
   // Increase the num_rows_ by one.

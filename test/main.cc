@@ -68,7 +68,8 @@ TEST(StorageTest, GetRowSlotWorks) {
   EXPECT_TRUE(result.ok());
 
   storage::Table* tbl = *result;
-  const char* page = tbl->GetRowSlot(1);
+  absl::StatusOr<const char*> page = tbl->GetRowSlot(100);
+  EXPECT_TRUE(page.ok());
   EXPECT_EQ(sizeof(page), 8);
 
   delete tbl;
