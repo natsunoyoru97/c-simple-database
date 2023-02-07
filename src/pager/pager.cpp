@@ -122,7 +122,6 @@ absl::Status Pager::Flush(uint32_t page_start) {
 }
 
 void Pager::IncRowCntByOne() {
-  std::lock_guard<std::mutex> guard(pager_mutex_);
   num_rows_++;
 }
 

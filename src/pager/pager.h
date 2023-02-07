@@ -37,8 +37,7 @@ class Pager {
   FileHandler* file_handler_;
   uint32_t file_len_;
   // Rows this block of memory has
-  uint32_t num_rows_;
-  std::mutex pager_mutex_;
+  std::atomic<uint32_t> num_rows_;
   // TODO(natsunoyoru97): how about using other data structures?
   // TODO(natsunoyoru97): also considering about using disk space
   std::array<char*, TABLE_MAX_PAGES> pages_;
