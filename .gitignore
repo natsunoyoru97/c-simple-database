@@ -89,7 +89,6 @@ tmp/
 .autotools
 
 /Debug/
-/misc/
 
 #==============================================================================#
 # Intellij files
@@ -243,3 +242,6 @@ docs/dev
 
 # Submission zip files
 *.zip
+
+# Ignore bazel output folders
+bazel-*
